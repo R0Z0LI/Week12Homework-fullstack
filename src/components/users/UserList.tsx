@@ -5,9 +5,17 @@ import TableHead from "../TableHead";
 import UserItem from "./UserItem";
 
 const UsersList: React.FC<{
+  onDelete: (index: number | undefined) => void;
+  onSuspend: (suspend: boolean | undefined) => void;
   items: User[];
 }> = (props) => {
   const [users, setUsers] = useState<User[]>(props.items);
+  const onDeleteHandler = (id: number | undefined) => {
+    props.onDelete(id);
+  };
+  const onSuspenHandler = (suspend: boolean | undefined) => {
+    props.onSuspend(suspend);
+  };
   return (
     <div>
       <ul className="p-4">
@@ -23,6 +31,8 @@ const UsersList: React.FC<{
             isSuspended={item.isSuspended}
             items={users}
             item={index}
+            onDelete={onDeleteHandler}
+            onSuspend={onSuspenHandler}
           />
         ))}
       </ul>
