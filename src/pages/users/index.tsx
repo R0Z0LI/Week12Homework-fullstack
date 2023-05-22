@@ -2,10 +2,9 @@ import axios from "axios";
 import Navbar from "../../components/NavBar";
 import UsersList from "../../components/users/UserList";
 import { User } from "../../model/user";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AddUserForm from "../../components/users/AddUserForm";
 import { NewUser } from "../../model/newUser";
-import { useRouter } from "next/router";
 import EditUserForm from "../../components/users/EditUserForm";
 
 interface Context {
@@ -24,35 +23,44 @@ export const getServerSideProps = async (context: Context) => {
       headers: { Authorization: authorizationHeader },
     });
     const data = response.data;
-    const users = await data.map((user: User, index: number) => ({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      password: user.password,
-      lastLogin: user.lastLogin,
-      isSuspended: user.isSuspended,
-      isAdmin: user.isAdmin,
-    }));
+    const users = await data
+      .map((user: User, index: number) => ({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        password: user.password,
+        lastLogin: user.lastLogin,
+        isSuspended: user.isSuspended,
+        isAdmin: user.isAdmin,
+      }))
+      .slice()
+      .reverse();
 
     return {
       props: {
-        users: JSON.parse(JSON.stringify(users)),
+        loadedUsers: JSON.parse(JSON.stringify(users)),
         token: token,
       },
     };
   } catch (error) {
     return {
       props: {
-        people: [],
+        loadedUsers: [],
         token: token,
       },
     };
   }
 };
 
-function UsersPage({ users, token }: { users: User[]; token: string }) {
+function UsersPage({
+  loadedUsers,
+  token,
+}: {
+  loadedUsers: User[];
+  token: string;
+}) {
   const [refreshKey, setRefreshKey] = useState<number>(0);
-  const [users2, setUsers2] = useState<User[]>(users);
+  const [users, setUsers] = useState<User[]>(loadedUsers);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [editUserId, setEditUserId] = useState(0);
@@ -67,8 +75,8 @@ function UsersPage({ users, token }: { users: User[]; token: string }) {
         }
       );
 
-      const newUsers = users2.filter((user) => user.id !== id);
-      setUsers2(newUsers);
+      const newUsers = users.filter((user) => user.id !== id);
+      setUsers(newUsers);
       if (response.status < 300) {
         refreshData();
       }
@@ -87,8 +95,8 @@ function UsersPage({ users, token }: { users: User[]; token: string }) {
         }
       );
       const data = response.data;
-      const addedUsers = [...users2, data];
-      setUsers2(addedUsers);
+      const addedUsers = [...users, data];
+      setUsers(addedUsers);
       if (response.status < 300) {
         refreshData();
       }
@@ -108,11 +116,11 @@ function UsersPage({ users, token }: { users: User[]; token: string }) {
         }
       );
       const updatedUser = response.data;
-      const updatedUsers = users2.map((user) =>
+      const updatedUsers = users.map((user) =>
         user.id === updatedUser.id ? updatedUser : user
       );
 
-      setUsers2(updatedUsers);
+      setUsers(updatedUsers);
       if (response.status < 300) {
         refreshData();
       }
@@ -133,11 +141,11 @@ function UsersPage({ users, token }: { users: User[]; token: string }) {
         }
       );
       const updatedUser = response.data;
-      const addedUsers = users2.map((user) =>
+      const addedUsers = users.map((user) =>
         user.id === updatedUser.id ? updatedUser : user
       );
-      setUsers2([...addedUsers]);
-      setUsers2(addedUsers);
+      setUsers([...addedUsers]);
+      setUsers(addedUsers);
       if (response.status < 300) {
         refreshData();
       }
@@ -170,13 +178,13 @@ function UsersPage({ users, token }: { users: User[]; token: string }) {
       )}
       {showUpdateModal && (
         <EditUserForm
-          user={users2.find((user) => user.id === editUserId)}
+          user={users.find((user) => user.id === editUserId)}
           onSubmit={onEditSubmitHandler}
           onClose={() => setShowUpdateModal(false)}
         />
       )}
       <UsersList
-        items={users2}
+        items={users}
         onDelete={onDeleteHandler}
         onSuspend={onSuspendHandler}
         onEdit={onEditHandler}

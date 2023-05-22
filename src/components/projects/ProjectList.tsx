@@ -1,16 +1,15 @@
 import { useState } from "react";
-import { User } from "../../model/user";
-import Navbar from "../NavBar";
-import TableHead from "./UserTableHead";
-import UserItem from "./UserItem";
+import { Project } from "../../model/project";
+import ProjectItem from "./ProjectItem";
+import ProjectTableHead from "./ProjectTableHead";
 
-const UsersList: React.FC<{
-  onDelete: (index: number) => void;
+const ProjectList: React.FC<{
+  onDelete: (index: number | undefined) => void;
   onSuspend: (suspend: boolean | undefined, id: number) => void;
-  onEdit: (index: number) => void;
-  items: User[];
+  onEdit: (index: number | undefined) => void;
+  items: Project[];
 }> = (props) => {
-  const [users, setUsers] = useState<User[]>(props.items);
+  const [projects, setProjects] = useState<Project[]>(props.items);
 
   const onDeleteHandler = (id: number | undefined) => {
     if (id !== undefined) {
@@ -34,18 +33,18 @@ const UsersList: React.FC<{
   };
   return (
     <div>
-      <ul className="m-4 border-2 border-black">
-        <TableHead />
-        {users.map((item, index) => (
-          <UserItem
+      <ul className="m-4 border-2 border-blue-500">
+        <ProjectTableHead />
+        {projects.map((item, index) => (
+          <ProjectItem
             key={item.id}
             id={item.id}
             name={item.name}
-            email={item.email}
-            login={item.lastLogin}
-            isAdmin={item.isAdmin}
-            isSuspended={item.isSuspended}
-            items={users}
+            decription={item.description}
+            status={item.status}
+            archived={item.isArchived}
+            managerId={item.manager}
+            items={projects}
             item={index}
             onDelete={onDeleteHandler}
             onSuspend={onSuspenHandler}
@@ -57,4 +56,4 @@ const UsersList: React.FC<{
   );
 };
 
-export default UsersList;
+export default ProjectList;
