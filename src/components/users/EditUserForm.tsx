@@ -3,16 +3,16 @@ import Modal from "react-modal";
 import { NewUser } from "../../model/newUser";
 import { User } from "../../model/user";
 
-const AddUserForm: React.FC<{
+const EditUserForm: React.FC<{
+  user: User | undefined;
   onSubmit: (user: NewUser) => void;
   onClose: () => void;
 }> = (props) => {
-  const [showModal, setShowModal] = useState(false);
-
   const nameInputRef = useRef<HTMLInputElement>(null);
   const emailInputRef = useRef<HTMLInputElement>(null);
   const passwordInputRef = useRef<HTMLInputElement>(null);
   const [isAdmin, setIsAdmi] = useState(false);
+  const [user, setUser] = useState(props.user);
 
   const dropdownChangerHandler = (event: ChangeEvent<HTMLSelectElement>) => {
     if (event.target.value === "User") {
@@ -26,7 +26,10 @@ const AddUserForm: React.FC<{
     event.preventDefault();
     const name = nameInputRef.current?.value;
     const email = emailInputRef.current?.value;
-    const password = passwordInputRef.current?.value;
+    let password = user?.password;
+    if (passwordInputRef.current?.value !== "") {
+      password = passwordInputRef.current?.value;
+    }
     const newUser: NewUser = { name, email, password, isAdmin };
     props.onSubmit(newUser);
   };
@@ -55,6 +58,7 @@ const AddUserForm: React.FC<{
                   required
                   id="name"
                   ref={nameInputRef}
+                  defaultValue={user === undefined ? "" : user.name}
                 />
               </div>
               <div className="flex flex-col p-2">
@@ -67,6 +71,7 @@ const AddUserForm: React.FC<{
                   required
                   id="email"
                   ref={emailInputRef}
+                  defaultValue={user === undefined ? "" : user.email}
                 />
               </div>
               <div className="flex flex-col p-2">
@@ -76,7 +81,6 @@ const AddUserForm: React.FC<{
                 <input
                   className="border-2 border-black w-60 rounded-lg p-1 "
                   type="password"
-                  required
                   id="password"
                   ref={passwordInputRef}
                 />
@@ -89,7 +93,9 @@ const AddUserForm: React.FC<{
                   name="roles"
                   id="roles"
                   onChange={dropdownChangerHandler}
-                  value="User"
+                  defaultValue={
+                    user === undefined ? "" : user.isAdmin ? "Admin" : "User"
+                  }
                 >
                   <option value="User">User</option>
                   <option value="Admin">Admin</option>
@@ -106,4 +112,4 @@ const AddUserForm: React.FC<{
   );
 };
 
-export default AddUserForm;
+export default EditUserForm;

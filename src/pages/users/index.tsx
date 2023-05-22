@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import AddUserForm from "../../components/users/AddUserForm";
 import { NewUser } from "../../model/newUser";
 import { useRouter } from "next/router";
+import EditUserForm from "../../components/users/EditUserForm";
 
 interface Context {
   req: {
@@ -27,6 +28,7 @@ export const getServerSideProps = async (context: Context) => {
       id: user.id,
       name: user.name,
       email: user.email,
+      password: user.password,
       lastLogin: user.lastLogin,
       isSuspended: user.isSuspended,
       isAdmin: user.isAdmin,
@@ -49,9 +51,11 @@ export const getServerSideProps = async (context: Context) => {
 };
 
 function UsersPage({ users, token }: { users: User[]; token: string }) {
-  const router = useRouter();
+  const [refreshKey, setRefreshKey] = useState<number>(0);
   const [users2, setUsers2] = useState<User[]>(users);
-  const [refreshList, setRefreshList] = useState<boolean>(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [editUserId, setEditUserId] = useState(0);
 
   const onDeleteHandler = async (id: number | undefined) => {
     const authorizationHeader = `Bearer ${token}`;
@@ -71,9 +75,9 @@ function UsersPage({ users, token }: { users: User[]; token: string }) {
     } catch (error) {}
   };
 
-  const onSubmitHandler = async (user: NewUser) => {
+  const onAddSubmitHandler = async (user: NewUser) => {
+    setShowAddModal(false);
     const authorizationHeader = `Bearer ${token}`;
-    console.log(authorizationHeader);
     try {
       const response = await axios.post(
         "http://localhost:3000/api/user",
@@ -83,8 +87,7 @@ function UsersPage({ users, token }: { users: User[]; token: string }) {
         }
       );
       const data = response.data;
-      const addedUsers = users2;
-      addedUsers.push(data);
+      const addedUsers = [...users2, data];
       setUsers2(addedUsers);
       if (response.status < 300) {
         refreshData();
@@ -92,22 +95,92 @@ function UsersPage({ users, token }: { users: User[]; token: string }) {
     } catch (error) {}
   };
 
-  const refreshData = () => {
-    router.replace(router.asPath);
+  const onEditSubmitHandler = async (user: NewUser) => {
+    setShowUpdateModal(false);
+    const authorizationHeader = `Bearer ${token}`;
+    console.log(user);
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/api/user/${editUserId}`,
+        user,
+        {
+          headers: { Authorization: authorizationHeader },
+        }
+      );
+      const updatedUser = response.data;
+      const updatedUsers = users2.map((user) =>
+        user.id === updatedUser.id ? updatedUser : user
+      );
+
+      setUsers2(updatedUsers);
+      if (response.status < 300) {
+        refreshData();
+      }
+    } catch (error) {}
   };
 
-  useEffect(() => {
-    if (refreshList) {
-      console.log("refreshed");
-      setRefreshList(false);
-    }
-  }, [refreshList]);
+  const onSuspendHandler = async (
+    suspend: boolean | undefined,
+    id: number | undefined
+  ) => {
+    const authorizationHeader = `Bearer ${token}`;
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/api/user/suspend/${id}`,
+        { suspend },
+        {
+          headers: { Authorization: authorizationHeader },
+        }
+      );
+      const updatedUser = response.data;
+      const addedUsers = users2.map((user) =>
+        user.id === updatedUser.id ? updatedUser : user
+      );
+      setUsers2([...addedUsers]);
+      setUsers2(addedUsers);
+      if (response.status < 300) {
+        refreshData();
+      }
+    } catch (error) {}
+  };
+
+  const onEditHandler = (id: number) => {
+    setEditUserId(id);
+    setShowUpdateModal(true);
+  };
+
+  const refreshData = () => {
+    setRefreshKey((oldKey) => oldKey + 1);
+  };
 
   return (
-    <div>
+    <div key={refreshKey} className="flex flex-col">
       <Navbar />
-      <AddUserForm onSubmit={onSubmitHandler} />
-      <UsersList items={users2} onDelete={onDeleteHandler} />
+      <button
+        className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 self-end mr-4"
+        onClick={() => setShowAddModal(true)}
+      >
+        Add User
+      </button>
+      {showAddModal && (
+        <AddUserForm
+          onSubmit={onAddSubmitHandler}
+          onClose={() => setShowAddModal(false)}
+        />
+      )}
+      {showUpdateModal && (
+        <EditUserForm
+          user={users2.find((user) => user.id === editUserId)}
+          onSubmit={onEditSubmitHandler}
+          onClose={() => setShowUpdateModal(false)}
+        />
+      )}
+      <UsersList
+        items={users2}
+        onDelete={onDeleteHandler}
+        onSuspend={onSuspendHandler}
+        onEdit={onEditHandler}
+      />
     </div>
   );
 }

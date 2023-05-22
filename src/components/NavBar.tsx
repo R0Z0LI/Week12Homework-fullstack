@@ -9,12 +9,12 @@ function Navbar() {
         </Link>
       </li>
       <li className="p-2 ml-8 rounded-lg bg-blue-300 hover:bg-blue-200">
-        <Link href="/tasks">
+        <Link href="/projects">
           <p className="">Projects</p>
         </Link>
       </li>
       <li className="p-2 ml-8 rounded-lg bg-blue-300 hover:bg-blue-200">
-        <Link href="/projects">
+        <Link href="/tasks">
           <p className="">Tasks</p>
         </Link>
       </li>

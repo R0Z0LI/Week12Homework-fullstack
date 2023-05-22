@@ -1,9 +1,9 @@
 import { User } from "../../model/user";
 import Icon from "@mdi/react";
-import { mdiAccountRemove, mdiAccountOff } from "@mdi/js";
+import { mdiAccountRemove, mdiAccountOff, mdiAccountEdit } from "@mdi/js";
 
 const UserItem: React.FC<{
-  id: number | undefined;
+  id: number;
   name: string | undefined;
   email: string | undefined;
   login: Date;
@@ -12,18 +12,30 @@ const UserItem: React.FC<{
   items: User[];
   item: number;
   onDelete: (index: number | undefined) => void;
-  onSuspend: (suspend: boolean | undefined) => void;
+  onSuspend: (suspend: boolean | undefined, id: number | undefined) => void;
+  onEdit: (index: number) => void;
 }> = (props) => {
   const onDeleteHandler = () => {
     props.onDelete(props.id);
   };
 
   const onSuspenHandler = () => {
-    props.isSuspended = !props.isSuspended;
-    props.onSuspend(props.isSuspended);
+    let suspended = !props.isSuspended;
+
+    props.onSuspend(suspended, props.id);
   };
+
+  const onEditHandler = () => {
+    props.onEdit(props.id);
+  };
+
   return (
-    <li className="p-3 grid gap-4 grid-cols-6 border-2 border-black hover:bg-blue-300">
+    <li
+      className="p-3 grid gap-4 border-2 border-black hover:bg-blue-300"
+      style={{
+        gridTemplateColumns: "minmax(0, 1fr) repeat(6, minmax(0, 2fr))",
+      }}
+    >
       <div>
         <p>{props.id}</p>
       </div>
@@ -47,6 +59,11 @@ const UserItem: React.FC<{
       <div>
         <button onClick={onDeleteHandler}>
           <Icon path={mdiAccountRemove} size={1} />
+        </button>
+      </div>
+      <div>
+        <button onClick={onEditHandler}>
+          <Icon path={mdiAccountEdit} size={1} />
         </button>
       </div>
     </li>

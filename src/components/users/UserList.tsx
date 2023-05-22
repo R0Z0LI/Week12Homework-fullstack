@@ -5,20 +5,36 @@ import TableHead from "../TableHead";
 import UserItem from "./UserItem";
 
 const UsersList: React.FC<{
-  onDelete: (index: number | undefined) => void;
-  onSuspend: (suspend: boolean | undefined) => void;
+  onDelete: (index: number) => void;
+  onSuspend: (suspend: boolean | undefined, id: number) => void;
+  onEdit: (index: number) => void;
   items: User[];
 }> = (props) => {
   const [users, setUsers] = useState<User[]>(props.items);
+
   const onDeleteHandler = (id: number | undefined) => {
-    props.onDelete(id);
+    if (id !== undefined) {
+      props.onDelete(id);
+    }
   };
-  const onSuspenHandler = (suspend: boolean | undefined) => {
-    props.onSuspend(suspend);
+
+  const onSuspenHandler = (
+    suspend: boolean | undefined,
+    id: number | undefined
+  ) => {
+    if (id !== undefined) {
+      props.onSuspend(suspend, id);
+    }
+  };
+
+  const onEditHandler = (id: number | undefined) => {
+    if (id !== undefined) {
+      props.onEdit(id);
+    }
   };
   return (
     <div>
-      <ul className="p-4">
+      <ul className="m-4 border-2 border-black">
         <TableHead />
         {users.map((item, index) => (
           <UserItem
@@ -33,6 +49,7 @@ const UsersList: React.FC<{
             item={index}
             onDelete={onDeleteHandler}
             onSuspend={onSuspenHandler}
+            onEdit={onEditHandler}
           />
         ))}
       </ul>
