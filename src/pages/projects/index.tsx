@@ -88,7 +88,23 @@ function ProjectsPage({
   const [showAddModal, setShowAddModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
 
-  const onDeleteHandler = () => {};
+  const onDeleteHandler = async (id: number | undefined) => {
+    const authorizationHeader = `Bearer ${token}`;
+    try {
+      const response = await axios.delete(
+        `http://localhost:3000/api/project/${id}`,
+        {
+          headers: { Authorization: authorizationHeader },
+        }
+      );
+
+      const newProjects = projects.filter((project) => project.id !== id);
+      setProjects(newProjects);
+      if (response.status < 300) {
+        refreshData();
+      }
+    } catch (error) {}
+  };
   const onSuspendHandler = () => {};
   const onEditHandler = () => {};
 
