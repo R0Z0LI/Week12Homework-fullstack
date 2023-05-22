@@ -4,7 +4,8 @@ const ProjectTableHead: React.FC<{}> = () => {
     <li
       className="p-3 grid gap-4 border-2 border-blue-500"
       style={{
-        gridTemplateColumns: "minmax(0, 1fr) 2fr repeat(5, minmax(0, 2fr))",
+        gridTemplateColumns:
+          "minmax(0, 0.3fr) repeat(4, minmax(0, 2fr)) repeat(2, minmax(0, 0.5fr))",
       }}
     >
       <div>

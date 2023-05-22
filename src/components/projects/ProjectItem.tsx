@@ -1,6 +1,6 @@
 import { User } from "../../model/user";
 import Icon from "@mdi/react";
-import { mdiAccountRemove, mdiAccountOff, mdiAccountEdit } from "@mdi/js";
+import { mdiDelete, mdiFileEdit } from "@mdi/js";
 import { Project } from "../../model/project";
 
 const ProjectItem: React.FC<{
@@ -26,38 +26,37 @@ const ProjectItem: React.FC<{
     props.onEdit(props.id);
   };
 
-  console.log(props.managerId);
-
   return (
     <li
       className="p-3 grid gap-4 border-2 border-blue-500 hover:bg-blue-300"
       style={{
-        gridTemplateColumns: "minmax(0, 1fr) repeat(6, minmax(0, 2fr))",
+        gridTemplateColumns:
+          "minmax(0, 0.3fr) repeat(4, minmax(0, 2fr)) repeat(2, minmax(0, 0.5fr))",
       }}
     >
-      <div>
+      <div className="p-1">
         <p>{props.id}</p>
       </div>
-      <div>
+      <div className="p-1">
         <p>{props.name}</p>
       </div>
-      <div>
+      <div className="p-1">
         <span>{props.decription}</span>
       </div>
-      <div>
+      <div className="p-1">
         <span>{props.status}</span>
       </div>
-      <div>
+      <div className="p-1">
         <span>{props.managerId?.name}</span>
       </div>
-      <div>
+      <div className="p-1">
         <button onClick={onDeleteHandler}>
-          <Icon path={mdiAccountRemove} size={1} />
+          <Icon path={mdiDelete} size={1} />
         </button>
       </div>
-      <div>
+      <div className="p-1">
         <button onClick={onEditHandler}>
-          <Icon path={mdiAccountEdit} size={1} />
+          <Icon path={mdiFileEdit} size={1} />
         </button>
       </div>
     </li>

@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import Navbar from "../../components/NavBar";
 import AddProjectForm from "../../components/projects/AddProjectForm";
+import EditProjectForm from "../../components/projects/EditProjectForm";
 import ProjectList from "../../components/projects/ProjectList";
 import { NewProject } from "../../model/newProject";
 import { Project } from "../../model/project";
@@ -85,6 +86,8 @@ function ProjectsPage({
   const [projects, setProjects] = useState<Project[]>(loadedProjects);
   const [refreshKey, setRefreshKey] = useState<number>(0);
 
+  const [projectId, setProjectId] = useState(0);
+
   const [showAddModal, setShowAddModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
 
@@ -106,7 +109,10 @@ function ProjectsPage({
     } catch (error) {}
   };
   const onSuspendHandler = () => {};
-  const onEditHandler = () => {};
+  const onEditHandler = (id: number) => {
+    setProjectId(id);
+    setShowUpdateModal(true);
+  };
 
   const onAddSubmitHandler = async (
     newProject: NewProject,
@@ -134,6 +140,8 @@ function ProjectsPage({
     } catch (error) {}
   };
 
+  const onEditSubmitHandler = () => {};
+
   const refreshData = () => {
     setRefreshKey((oldKey) => oldKey + 1);
   };
@@ -154,13 +162,14 @@ function ProjectsPage({
           items={users}
         />
       )}
-      {/*showUpdateModal && (
-        <EditUserForm
-          user={users.find((user) => user.id === editUserId)}
+      {showUpdateModal && (
+        <EditProjectForm
+          project={projects.find((user) => user.id === projectId)}
           onSubmit={onEditSubmitHandler}
           onClose={() => setShowUpdateModal(false)}
+          items={users}
         />
-      )*/}
+      )}
       <ProjectList
         items={projects}
         onDelete={onDeleteHandler}

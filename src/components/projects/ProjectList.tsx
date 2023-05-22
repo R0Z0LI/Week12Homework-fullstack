@@ -6,7 +6,7 @@ import ProjectTableHead from "./ProjectTableHead";
 const ProjectList: React.FC<{
   onDelete: (index: number | undefined) => void;
   onSuspend: (suspend: boolean | undefined, id: number) => void;
-  onEdit: (index: number | undefined) => void;
+  onEdit: (index: number) => void;
   items: Project[];
 }> = (props) => {
   const [projects, setProjects] = useState<Project[]>(props.items);
