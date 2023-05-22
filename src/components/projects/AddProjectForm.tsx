@@ -1,9 +1,15 @@
 import { ChangeEvent, useRef, useState } from "react";
+import { NewProject } from "../../model/newProject";
 import { NewUser } from "../../model/newUser";
 import { User } from "../../model/user";
 
+export enum ProjectStatus {
+  ACTIVE = "active",
+  COMPLETED = "completed",
+}
+
 const AddProjectForm: React.FC<{
-  onSubmit: (user: NewUser) => void;
+  onSubmit: (project: NewProject, addedUsers: User[]) => void;
   onClose: () => void;
   items: User[];
 }> = (props) => {
@@ -12,20 +18,18 @@ const AddProjectForm: React.FC<{
   const nameInputRef = useRef<HTMLInputElement>(null);
   const descInputRef = useRef<HTMLInputElement>(null);
   const managerInputRef = useRef<HTMLSelectElement>(null);
-  const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
+  const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
 
   const checkboxChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    if (event.target.checked) {
-      setSelectedUsers((prevUsers) => [
-        ...prevUsers,
-        Number(event.target.value),
-      ]);
+    const userId = Number(event.target.value);
+    const user = props.items.find((user) => user.id === userId);
+
+    if (event.target.checked && user) {
+      setSelectedUsers((prevUsers) => [...prevUsers, user]);
     } else {
-      setSelectedUsers((prevUsers) =>
-        prevUsers.filter((id) => id !== Number(event.target.value))
-      );
+      setSelectedUsers((prevUsers) => prevUsers.filter((u) => u.id !== userId));
     }
   };
 
@@ -37,13 +41,19 @@ const AddProjectForm: React.FC<{
     const managerArray = managerValue?.split(" ");
 
     const managerId = managerArray ? +managerArray[0] : undefined;
+    const status: ProjectStatus = ProjectStatus.ACTIVE;
 
     const manager = props.items.find((item) => item.id === managerId);
+    const isArchived = false;
 
-    console.log(selectedUsers);
-
-    //const newUser: NewUser = { name, email, password, isAdmin };
-    //props.onSubmit(newUser);
+    const newProject: NewProject = {
+      name,
+      description,
+      isArchived,
+      status,
+      manager,
+    };
+    props.onSubmit(newProject, selectedUsers);
   };
 
   return (

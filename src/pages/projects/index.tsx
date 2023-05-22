@@ -3,6 +3,7 @@ import { useState } from "react";
 import Navbar from "../../components/NavBar";
 import AddProjectForm from "../../components/projects/AddProjectForm";
 import ProjectList from "../../components/projects/ProjectList";
+import { NewProject } from "../../model/newProject";
 import { Project } from "../../model/project";
 import { User } from "../../model/user";
 
@@ -41,7 +42,6 @@ export const getServerSideProps = async (context: Context) => {
       }
     );
     const projectData = projectResponse.data;
-    console.log(projectData);
     const projects = await projectData
       .map((project: Project) => ({
         id: project.id,
@@ -92,7 +92,35 @@ function ProjectsPage({
   const onSuspendHandler = () => {};
   const onEditHandler = () => {};
 
-  const onAddSubmitHandler = () => {};
+  const onAddSubmitHandler = async (
+    newProject: NewProject,
+    addedUsers: User[]
+  ) => {
+    setShowAddModal(false);
+    const authorizationHeader = `Bearer ${token}`;
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/project",
+        {
+          project: newProject,
+          users: addedUsers,
+        },
+        {
+          headers: { Authorization: authorizationHeader },
+        }
+      );
+      const data = response.data;
+      const addedProjects = [...projects, data];
+      setProjects(addedProjects);
+      if (response.status < 300) {
+        refreshData();
+      }
+    } catch (error) {}
+  };
+
+  const refreshData = () => {
+    setRefreshKey((oldKey) => oldKey + 1);
+  };
 
   return (
     <div key={refreshKey} className="flex flex-col">
