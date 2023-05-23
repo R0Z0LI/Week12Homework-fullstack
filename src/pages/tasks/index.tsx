@@ -162,10 +162,11 @@ function TaskPage({
         }
       );
       const updatedTask = response.data;
-      const updatedTasks = projects.map((task) =>
+      const updatedTasks = tasks.map((task) =>
         task.id === updatedTask.id ? updatedTask : task
       );
-      setProjects(updatedTasks);
+      console.log(updatedTasks);
+      setTasks(updatedTasks);
       const sortTasks = updatedTasks.filter((task) => !task.isArchived);
       setSortedTasks(sortTasks);
       if (response.status < 300) {
@@ -237,7 +238,7 @@ function TaskPage({
         }
       );
       const updatedTask = response.data;
-      const updatedTasks = projects.map((task) =>
+      const updatedTasks = tasks.map((task) =>
         task.id === updatedTask.id ? updatedTask : task
       );
       setProjects(updatedTasks);
