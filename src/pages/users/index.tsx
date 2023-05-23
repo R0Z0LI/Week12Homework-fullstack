@@ -23,18 +23,15 @@ export const getServerSideProps = async (context: Context) => {
       headers: { Authorization: authorizationHeader },
     });
     const data = response.data;
-    const users = await data
-      .map((user: User, index: number) => ({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        password: user.password,
-        lastLogin: user.lastLogin,
-        isSuspended: user.isSuspended,
-        isAdmin: user.isAdmin,
-      }))
-      .slice()
-      .reverse();
+    const users = await data.map((user: User, index: number) => ({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      lastLogin: user.lastLogin,
+      isSuspended: user.isSuspended,
+      isAdmin: user.isAdmin,
+    }));
 
     return {
       props: {
@@ -145,7 +142,6 @@ function UsersPage({
         user.id === updatedUser.id ? updatedUser : user
       );
       setUsers([...addedUsers]);
-      setUsers(addedUsers);
       if (response.status < 300) {
         refreshData();
       }

@@ -5,7 +5,7 @@ const ProjectTableHead: React.FC<{}> = () => {
       className="p-3 grid gap-4 border-2 border-blue-500"
       style={{
         gridTemplateColumns:
-          "minmax(0, 0.3fr) repeat(4, minmax(0, 2fr)) repeat(2, minmax(0, 0.5fr))",
+          "minmax(0, 0.3fr) repeat(4, minmax(0, 2fr)) repeat(3, minmax(0, 0.7fr))",
       }}
     >
       <div>
@@ -22,6 +22,9 @@ const ProjectTableHead: React.FC<{}> = () => {
       </div>
       <div>
         <span className="p-1">Manager</span>
+      </div>
+      <div>
+        <span className="p-1">Archive</span>
       </div>
       <div>
         <span className="p-1">Delete</span>

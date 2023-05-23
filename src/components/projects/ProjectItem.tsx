@@ -1,6 +1,6 @@
 import { User } from "../../model/user";
 import Icon from "@mdi/react";
-import { mdiDelete, mdiFileEdit } from "@mdi/js";
+import { mdiDelete, mdiFileEdit, mdiArchiveArrowDown } from "@mdi/js";
 import { Project } from "../../model/project";
 
 const ProjectItem: React.FC<{
@@ -13,17 +13,20 @@ const ProjectItem: React.FC<{
   items: Project[];
   item: number;
   onDelete: (index: number | undefined) => void;
-  onSuspend: (suspend: boolean | undefined, id: number | undefined) => void;
+  onArchive: (archive: boolean | undefined, id: number | undefined) => void;
   onEdit: (index: number | undefined) => void;
 }> = (props) => {
   const onDeleteHandler = () => {
     props.onDelete(props.id);
   };
 
-  const onSuspenHandler = () => {};
-
   const onEditHandler = () => {
     props.onEdit(props.id);
+  };
+
+  const onArchiveHandler = () => {
+    const isArchived = !props.archived;
+    props.onArchive(isArchived, props.id);
   };
 
   return (
@@ -31,7 +34,7 @@ const ProjectItem: React.FC<{
       className="p-3 grid gap-4 border-2 border-blue-500 hover:bg-blue-300"
       style={{
         gridTemplateColumns:
-          "minmax(0, 0.3fr) repeat(4, minmax(0, 2fr)) repeat(2, minmax(0, 0.5fr))",
+          "minmax(0, 0.3fr) repeat(4, minmax(0, 2fr)) repeat(3, minmax(0, 0.7fr))",
       }}
     >
       <div className="p-1">
@@ -48,6 +51,11 @@ const ProjectItem: React.FC<{
       </div>
       <div className="p-1">
         <span>{props.managerId?.name}</span>
+      </div>
+      <div className="p-1">
+        <button onClick={onArchiveHandler}>
+          <Icon path={mdiArchiveArrowDown} size={1} />
+        </button>
       </div>
       <div className="p-1">
         <button onClick={onDeleteHandler}>

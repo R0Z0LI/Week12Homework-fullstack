@@ -5,7 +5,7 @@ import ProjectTableHead from "./ProjectTableHead";
 
 const ProjectList: React.FC<{
   onDelete: (index: number | undefined) => void;
-  onSuspend: (suspend: boolean | undefined, id: number) => void;
+  onArchive: (archive: boolean | undefined, id: number) => void;
   onEdit: (index: number) => void;
   items: Project[];
 }> = (props) => {
@@ -17,12 +17,12 @@ const ProjectList: React.FC<{
     }
   };
 
-  const onSuspenHandler = (
-    suspend: boolean | undefined,
+  const onArchiveHandler = (
+    archive: boolean | undefined,
     id: number | undefined
   ) => {
     if (id !== undefined) {
-      props.onSuspend(suspend, id);
+      props.onArchive(archive, id);
     }
   };
 
@@ -47,7 +47,7 @@ const ProjectList: React.FC<{
             items={projects}
             item={index}
             onDelete={onDeleteHandler}
-            onSuspend={onSuspenHandler}
+            onArchive={onArchiveHandler}
             onEdit={onEditHandler}
           />
         ))}
