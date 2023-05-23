@@ -5,11 +5,12 @@ import AddProjectForm from "../../components/projects/AddProjectForm";
 import EditProjectForm from "../../components/projects/EditProjectForm";
 import ProjectList from "../../components/projects/ProjectList";
 import AddTaskForm from "../../components/tasks/AddTaskForm";
+import EditTaskForm from "../../components/tasks/EditTaskForm";
 import TasksList from "../../components/tasks/TaskList";
 import { NewProject } from "../../model/newProject";
 import { NewTask } from "../../model/newTask";
 import { Project } from "../../model/project";
-import { Task } from "../../model/task";
+import { Task, TaskStatus } from "../../model/task";
 import { User } from "../../model/user";
 import { ProjectStatus } from "../../utils/utils";
 
@@ -74,7 +75,6 @@ export const getServerSideProps = async (context: Context) => {
         project: task.project,
       };
     });
-    console.log(tasks);
     return {
       props: {
         loadedUsers: JSON.parse(JSON.stringify(users)),
@@ -165,7 +165,6 @@ function TaskPage({
       const updatedTasks = tasks.map((task) =>
         task.id === updatedTask.id ? updatedTask : task
       );
-      console.log(updatedTasks);
       setTasks(updatedTasks);
       const sortTasks = updatedTasks.filter((task) => !task.isArchived);
       setSortedTasks(sortTasks);
@@ -212,10 +211,10 @@ function TaskPage({
         }
       );
       const updatedTask = response.data;
-      const updatedTasks = projects.map((task) =>
+      const updatedTasks = tasks.map((task) =>
         task.id === updatedTask.id ? updatedTask : task
       );
-      setProjects(updatedTasks);
+      setTasks(updatedTasks);
       const sortTasks = updatedTasks.filter((task) => !task.isArchived);
       setSortedTasks(sortTasks);
       if (response.status < 300) {
@@ -228,11 +227,12 @@ function TaskPage({
     status: string,
     id: number | undefined
   ) => {
-    const statusToUpdate = status as ProjectStatus;
+    const statusToUpdate = status as TaskStatus;
+    console.log(statusToUpdate);
     try {
       const response = await axios.put(
         `http://localhost:3000/api/task/status/${id}`,
-        { status: statusToUpdate },
+        { taskStatus: statusToUpdate },
         {
           headers: { Authorization: authorizationHeader },
         }
@@ -275,6 +275,15 @@ function TaskPage({
           onClose={() => setShowAddModal(false)}
           users={users}
           projects={projects}
+        />
+      )}
+      {showUpdateModal && (
+        <EditTaskForm
+          onSubmit={onEditSubmitHandler}
+          onClose={() => setShowAddModal(false)}
+          users={users}
+          projects={projects}
+          task={tasks.find((task) => task.id === taskId)}
         />
       )}
       <TasksList

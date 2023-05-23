@@ -266,7 +266,7 @@ function ProjectsPage({
       )}
       {showUpdateModal && (
         <EditProjectForm
-          project={projects.find((user) => user.id === projectId)}
+          project={projects.find((project) => project.id === projectId)}
           onSubmit={onEditSubmitHandler}
           onClose={() => setShowUpdateModal(false)}
           items={users}
