@@ -74,6 +74,7 @@ export const getServerSideProps = async (context: Context) => {
         project: task.project,
       };
     });
+    console.log(tasks);
     return {
       props: {
         loadedUsers: JSON.parse(JSON.stringify(users)),

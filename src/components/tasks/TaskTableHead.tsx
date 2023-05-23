@@ -5,7 +5,7 @@ const TaskTableHead: React.FC<{}> = () => {
       className="p-3 grid gap-4 border-2 border-blue-500"
       style={{
         gridTemplateColumns:
-          "minmax(0, 0.3fr) repeat(4, minmax(0, 2fr)) repeat(3, minmax(0, 0.7fr))",
+          "minmax(0, 0.3fr) repeat(5, minmax(0, 2fr)) repeat(3, minmax(0, 0.7fr))",
       }}
     >
       <div>
@@ -21,7 +21,10 @@ const TaskTableHead: React.FC<{}> = () => {
         <span className="p-1">Status</span>
       </div>
       <div>
-        <span className="p-1">Manager</span>
+        <span className="p-1">User</span>
+      </div>
+      <div>
+        <span className="p-1">Project</span>
       </div>
       <div>
         <span className="p-1">Archive</span>

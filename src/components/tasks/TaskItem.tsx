@@ -21,7 +21,6 @@ const TaskItem: React.FC<{
   onChangeStatus: (status: string, id: number | undefined) => void;
 }> = (props) => {
   const [selectedStatus, setSelectedStatus] = useState(props.status);
-
   const onDeleteHandler = () => {
     props.onDelete(props.id);
   };
@@ -46,7 +45,7 @@ const TaskItem: React.FC<{
       className="p-3 grid gap-4 border-2 border-blue-500 hover:bg-blue-300"
       style={{
         gridTemplateColumns:
-          "minmax(0, 0.3fr) repeat(4, minmax(0, 2fr)) repeat(3, minmax(0, 0.7fr))",
+          "minmax(0, 0.3fr) repeat(5, minmax(0, 2fr)) repeat(3, minmax(0, 0.7fr))",
       }}
     >
       <div className="p-1">
@@ -69,6 +68,9 @@ const TaskItem: React.FC<{
       </div>
       <div className="p-1">
         <span>{props.user?.name}</span>
+      </div>
+      <div className="p-1">
+        <span>{props.project?.name}</span>
       </div>
       <div className="p-1">
         <button onClick={onArchiveHandler}>
