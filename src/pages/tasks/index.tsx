@@ -4,9 +4,10 @@ import Navbar from "../../components/NavBar";
 import AddProjectForm from "../../components/projects/AddProjectForm";
 import EditProjectForm from "../../components/projects/EditProjectForm";
 import ProjectList from "../../components/projects/ProjectList";
+import AddTaskForm from "../../components/tasks/AddTaskForm";
 import TasksList from "../../components/tasks/TaskList";
 import { NewProject } from "../../model/newProject";
-import { newTask } from "../../model/newTask";
+import { NewTask } from "../../model/newTask";
 import { Project } from "../../model/project";
 import { Task } from "../../model/task";
 import { User } from "../../model/user";
@@ -176,21 +177,20 @@ function TaskPage({
     setTaskId(id);
     setShowUpdateModal(true);
   };
-  const onAddSubmitHandler = async (newTask: newTask) => {
+
+  const onAddSubmitHandler = async (newTask: NewTask) => {
     setShowAddModal(false);
     try {
       const response = await axios.post(
         "http://localhost:3000/api/task",
-        {
-          newTask,
-        },
+        newTask,
         {
           headers: { Authorization: authorizationHeader },
         }
       );
       const data = response.data;
       const addedTasks = [...tasks, data];
-      setProjects(addedTasks);
+      setTasks(addedTasks);
       const sortTasks = addedTasks.filter((task) => !task.isArchived);
       setSortedTasks(sortTasks);
       if (response.status < 300) {
@@ -203,7 +203,7 @@ function TaskPage({
     setShowUpdateModal(false);
     try {
       const response = await axios.put(
-        `http://localhost:3000/api/project/${taskId}`,
+        `http://localhost:3000/api/task/${taskId}`,
         task,
         {
           headers: { Authorization: authorizationHeader },
@@ -267,6 +267,14 @@ function TaskPage({
       >
         Add Task
       </button>
+      {showAddModal && (
+        <AddTaskForm
+          onSubmit={onAddSubmitHandler}
+          onClose={() => setShowAddModal(false)}
+          users={users}
+          projects={projects}
+        />
+      )}
       <TasksList
         items={sortedTasks}
         onDelete={onDeleteHandler}
