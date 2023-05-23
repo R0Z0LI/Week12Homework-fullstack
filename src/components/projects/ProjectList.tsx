@@ -7,6 +7,7 @@ const ProjectList: React.FC<{
   onDelete: (index: number | undefined) => void;
   onArchive: (archive: boolean | undefined, id: number) => void;
   onEdit: (index: number) => void;
+  onChangeStatus: (status: string, id: number | undefined) => void;
   items: Project[];
 }> = (props) => {
   const [projects, setProjects] = useState<Project[]>(props.items);
@@ -31,6 +32,12 @@ const ProjectList: React.FC<{
       props.onEdit(id);
     }
   };
+
+  const onChangeStatusHandler = (status: string, id: number | undefined) => {
+    if (id !== undefined) {
+      props.onChangeStatus(status, id);
+    }
+  };
   return (
     <div>
       <ul className="m-4 border-2 border-blue-500">
@@ -49,6 +56,7 @@ const ProjectList: React.FC<{
             onDelete={onDeleteHandler}
             onArchive={onArchiveHandler}
             onEdit={onEditHandler}
+            onChangeStatus={onChangeStatusHandler}
           />
         ))}
       </ul>

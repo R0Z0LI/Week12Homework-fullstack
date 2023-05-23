@@ -1,10 +1,6 @@
+import { ProjectStatus } from "../utils/utils";
 import { Task } from "./task";
 import { User } from "./user";
-
-export enum ProjectStatus {
-  ACTIVE = "active",
-  COMPLETED = "completed",
-}
 
 export interface Project {
   id?: number;

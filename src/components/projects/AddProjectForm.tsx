@@ -2,11 +2,7 @@ import { ChangeEvent, useRef, useState } from "react";
 import { NewProject } from "../../model/newProject";
 import { NewUser } from "../../model/newUser";
 import { User } from "../../model/user";
-
-export enum ProjectStatus {
-  ACTIVE = "active",
-  COMPLETED = "completed",
-}
+import { ProjectStatus } from "../../utils/utils";
 
 const AddProjectForm: React.FC<{
   onSubmit: (project: NewProject, addedUsers: User[]) => void;

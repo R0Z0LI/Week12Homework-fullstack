@@ -3,11 +3,7 @@ import { NewProject } from "../../model/newProject";
 import { NewUser } from "../../model/newUser";
 import { Project } from "../../model/project";
 import { User } from "../../model/user";
-
-export enum ProjectStatus {
-  ACTIVE = "active",
-  COMPLETED = "completed",
-}
+import { ProjectStatus } from "../../utils/utils";
 
 const EditProjectForm: React.FC<{
   onSubmit: (project: NewProject) => void;

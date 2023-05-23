@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../../components/NavBar";
 import AddProjectForm from "../../components/projects/AddProjectForm";
 import EditProjectForm from "../../components/projects/EditProjectForm";
@@ -7,6 +7,7 @@ import ProjectList from "../../components/projects/ProjectList";
 import { NewProject } from "../../model/newProject";
 import { Project } from "../../model/project";
 import { User } from "../../model/user";
+import { ProjectStatus } from "../../utils/utils";
 
 interface Context {
   req: {
@@ -49,7 +50,7 @@ export const getServerSideProps = async (context: Context) => {
         name: project.name,
         description: project.description,
         status: project.status,
-        archived: project.isArchived,
+        isArchived: project.isArchived,
         manager: project.manager,
         users: project.users,
       };
@@ -83,6 +84,8 @@ function ProjectsPage({
 }) {
   const [users, setUsers] = useState<User[]>(loadedUsers);
   const [projects, setProjects] = useState<Project[]>(loadedProjects);
+  const [sortedProjects, setSortedProjects] = useState<Project[]>([]);
+
   const [refreshKey, setRefreshKey] = useState<number>(0);
 
   const [projectId, setProjectId] = useState(0);
@@ -91,8 +94,20 @@ function ProjectsPage({
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
 
+  const authorizationHeader = `Bearer ${token}`;
+
+  useEffect(() => {
+    if (showArchived) {
+      setSortedProjects(projects);
+    } else {
+      setSortedProjects(projects.filter((project) => !project.isArchived));
+    }
+    refreshData();
+  }, [projects, showArchived]);
+
+  //console.log(sortedProjects[1].isArchived);
+
   const onDeleteHandler = async (id: number | undefined) => {
-    const authorizationHeader = `Bearer ${token}`;
     try {
       const response = await axios.delete(
         `http://localhost:3000/api/project/${id}`,
@@ -101,8 +116,12 @@ function ProjectsPage({
         }
       );
 
-      const newProjects = projects.filter((project) => project.id !== id);
-      setProjects(newProjects);
+      const updatedProjects = projects.filter((project) => project.id !== id);
+      setProjects(updatedProjects);
+      const sortProjects = updatedProjects.filter(
+        (project) => !project.isArchived
+      );
+      setSortedProjects(sortProjects);
       if (response.status < 300) {
         refreshData();
       }
@@ -112,7 +131,6 @@ function ProjectsPage({
     archive: boolean | undefined,
     id: number | undefined
   ) => {
-    const authorizationHeader = `Bearer ${token}`;
     try {
       const response = await axios.put(
         `http://localhost:3000/api/project/archive/${id}`,
@@ -126,6 +144,10 @@ function ProjectsPage({
         project.id === updatedProject.id ? updatedProject : project
       );
       setProjects(updatedProjects);
+      const sortProjects = updatedProjects.filter(
+        (project) => !project.isArchived
+      );
+      setSortedProjects(sortProjects);
       if (response.status < 300) {
         refreshData();
       }
@@ -142,7 +164,6 @@ function ProjectsPage({
     addedUsers: User[]
   ) => {
     setShowAddModal(false);
-    const authorizationHeader = `Bearer ${token}`;
     try {
       const response = await axios.post(
         "http://localhost:3000/api/project",
@@ -157,6 +178,10 @@ function ProjectsPage({
       const data = response.data;
       const addedProjects = [...projects, data];
       setProjects(addedProjects);
+      const sortProjects = addedProjects.filter(
+        (project) => !project.isArchived
+      );
+      setSortedProjects(sortProjects);
       if (response.status < 300) {
         refreshData();
       }
@@ -165,7 +190,6 @@ function ProjectsPage({
 
   const onEditSubmitHandler = async (project: Project) => {
     setShowUpdateModal(false);
-    const authorizationHeader = `Bearer ${token}`;
     try {
       const response = await axios.put(
         `http://localhost:3000/api/project/${projectId}`,
@@ -186,6 +210,34 @@ function ProjectsPage({
     } catch (error) {}
   };
 
+  const onChangeStatusHandler = async (
+    status: string,
+    id: number | undefined
+  ) => {
+    const statusToUpdate = status as ProjectStatus;
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/api/project/status/${id}`,
+        { status: statusToUpdate },
+        {
+          headers: { Authorization: authorizationHeader },
+        }
+      );
+      const updatedProject = response.data;
+      const updatedProjects = projects.map((project) =>
+        project.id === updatedProject.id ? updatedProject : project
+      );
+      setProjects(updatedProjects);
+      const sortProjects = updatedProjects.filter(
+        (project) => !project.isArchived
+      );
+      setSortedProjects(sortProjects);
+      if (response.status < 300) {
+        refreshData();
+      }
+    } catch (error) {}
+  };
+
   const refreshData = () => {
     setRefreshKey((oldKey) => oldKey + 1);
   };
@@ -194,7 +246,7 @@ function ProjectsPage({
     <div key={refreshKey} className="flex flex-col">
       <Navbar />
       <button
-        className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 self-end mr-4"
+        className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 self-start mr-4"
         onClick={() => setShowArchived((prev) => !prev)}
       >
         {showArchived ? "Hide Archived Projects" : "Show Archived Projects"}
@@ -221,10 +273,11 @@ function ProjectsPage({
         />
       )}
       <ProjectList
-        items={projects}
+        items={sortedProjects}
         onDelete={onDeleteHandler}
         onArchive={onArchiveHandler}
         onEdit={onEditHandler}
+        onChangeStatus={onChangeStatusHandler}
       />
     </div>
   );
