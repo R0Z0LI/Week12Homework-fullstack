@@ -4,7 +4,9 @@ import Navbar from "../../components/NavBar";
 import AddProjectForm from "../../components/projects/AddProjectForm";
 import EditProjectForm from "../../components/projects/EditProjectForm";
 import ProjectList from "../../components/projects/ProjectList";
+import TasksList from "../../components/tasks/TaskList";
 import { NewProject } from "../../model/newProject";
+import { newTask } from "../../model/newTask";
 import { Project } from "../../model/project";
 import { Task } from "../../model/task";
 import { User } from "../../model/user";
@@ -109,11 +111,171 @@ function TaskPage({
 
   const [refreshKey, setRefreshKey] = useState<number>(0);
 
-  const [tasktId, setTaskId] = useState(0);
+  const [taskId, setTaskId] = useState(0);
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
 
   const authorizationHeader = `Bearer ${token}`;
+
+  useEffect(() => {
+    if (showArchived) {
+      setSortedTasks(tasks);
+    } else {
+      setSortedTasks(tasks.filter((task) => !task.isArchived));
+    }
+    refreshData();
+  }, [projects, showArchived]);
+
+  const onDeleteHandler = async (id: number | undefined) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:3000/api/task/${id}`,
+        {
+          headers: { Authorization: authorizationHeader },
+        }
+      );
+
+      const updatedTasks = tasks.filter((task) => task.id !== id);
+      setTasks(updatedTasks);
+      const sortTasks = updatedTasks.filter((project) => !project.isArchived);
+      setSortedTasks(sortTasks);
+      if (response.status < 300) {
+        refreshData();
+      }
+    } catch (error) {}
+  };
+
+  const onArchiveHandler = async (
+    archive: boolean | undefined,
+    id: number | undefined
+  ) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/api/task/archive/${id}`,
+        { isArchived: archive },
+        {
+          headers: { Authorization: authorizationHeader },
+        }
+      );
+      const updatedTask = response.data;
+      const updatedTasks = projects.map((task) =>
+        task.id === updatedTask.id ? updatedTask : task
+      );
+      setProjects(updatedTasks);
+      const sortTasks = updatedTasks.filter((task) => !task.isArchived);
+      setSortedTasks(sortTasks);
+      if (response.status < 300) {
+        refreshData();
+      }
+    } catch (error) {}
+  };
+
+  const onEditHandler = (id: number) => {
+    setTaskId(id);
+    setShowUpdateModal(true);
+  };
+  const onAddSubmitHandler = async (newTask: newTask) => {
+    setShowAddModal(false);
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/task",
+        {
+          newTask,
+        },
+        {
+          headers: { Authorization: authorizationHeader },
+        }
+      );
+      const data = response.data;
+      const addedTasks = [...tasks, data];
+      setProjects(addedTasks);
+      const sortTasks = addedTasks.filter((task) => !task.isArchived);
+      setSortedTasks(sortTasks);
+      if (response.status < 300) {
+        refreshData();
+      }
+    } catch (error) {}
+  };
+
+  const onEditSubmitHandler = async (task: Task) => {
+    setShowUpdateModal(false);
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/api/project/${taskId}`,
+        task,
+        {
+          headers: { Authorization: authorizationHeader },
+        }
+      );
+      const updatedTask = response.data;
+      const updatedTasks = projects.map((task) =>
+        task.id === updatedTask.id ? updatedTask : task
+      );
+      setProjects(updatedTasks);
+      const sortTasks = updatedTasks.filter((task) => !task.isArchived);
+      setSortedTasks(sortTasks);
+      if (response.status < 300) {
+        refreshData();
+      }
+    } catch (error) {}
+  };
+
+  const onChangeStatusHandler = async (
+    status: string,
+    id: number | undefined
+  ) => {
+    const statusToUpdate = status as ProjectStatus;
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/api/task/status/${id}`,
+        { status: statusToUpdate },
+        {
+          headers: { Authorization: authorizationHeader },
+        }
+      );
+      const updatedTask = response.data;
+      const updatedTasks = projects.map((task) =>
+        task.id === updatedTask.id ? updatedTask : task
+      );
+      setProjects(updatedTasks);
+      const sortTasks = updatedTasks.filter((task) => !task.isArchived);
+      setSortedTasks(sortTasks);
+      if (response.status < 300) {
+        refreshData();
+      }
+    } catch (error) {}
+  };
+
+  const refreshData = () => {
+    setRefreshKey((oldKey) => oldKey + 1);
+  };
+
+  return (
+    <div key={refreshKey} className="flex flex-col">
+      <Navbar />
+      <button
+        className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 self-start mr-4"
+        onClick={() => setShowArchived((prev) => !prev)}
+      >
+        {showArchived ? "Hide Archived Tasks" : "Show Archived Tasks"}
+      </button>
+      <button
+        className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 self-end mr-4"
+        onClick={() => setShowAddModal(true)}
+      >
+        Add Task
+      </button>
+      <TasksList
+        items={sortedTasks}
+        onDelete={onDeleteHandler}
+        onArchive={onArchiveHandler}
+        onEdit={onEditHandler}
+        onChangeStatus={onChangeStatusHandler}
+      />
+    </div>
+  );
 }
+
+export default TaskPage;

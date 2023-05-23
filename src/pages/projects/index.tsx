@@ -105,8 +105,6 @@ function ProjectsPage({
     refreshData();
   }, [projects, showArchived]);
 
-  //console.log(sortedProjects[1].isArchived);
-
   const onDeleteHandler = async (id: number | undefined) => {
     try {
       const response = await axios.delete(
@@ -115,7 +113,6 @@ function ProjectsPage({
           headers: { Authorization: authorizationHeader },
         }
       );
-
       const updatedProjects = projects.filter((project) => project.id !== id);
       setProjects(updatedProjects);
       const sortProjects = updatedProjects.filter(
@@ -202,7 +199,10 @@ function ProjectsPage({
       const updatedProjects = projects.map((project) =>
         project.id === updatedProject.id ? updatedProject : project
       );
-
+      const sortProjects = updatedProjects.filter(
+        (project) => !project.isArchived
+      );
+      setSortedProjects(sortProjects);
       setProjects(updatedProjects);
       if (response.status < 300) {
         refreshData();
