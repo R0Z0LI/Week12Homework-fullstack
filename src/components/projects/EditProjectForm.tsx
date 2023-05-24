@@ -6,12 +6,12 @@ import { User } from "../../model/user";
 import { ProjectStatus } from "../../utils/utils";
 
 const EditProjectForm: React.FC<{
-  onSubmit: (project: NewProject) => void;
+  onSubmit: (project: NewProject, users?: User[]) => void;
   onClose: () => void;
   items: User[];
-  project: Project | undefined;
+  project?: Project;
 }> = (props) => {
-  const [showModal, setShowModal] = useState(false);
+  const [project, setProject] = useState(props.project);
 
   const nameInputRef = useRef<HTMLInputElement>(null);
   const descInputRef = useRef<HTMLInputElement>(null);
@@ -57,7 +57,7 @@ const EditProjectForm: React.FC<{
       manager,
       users: selectedUsers,
     };
-    props.onSubmit(newProject);
+    props.onSubmit(newProject, selectedUsers);
   };
 
   return (
@@ -84,7 +84,7 @@ const EditProjectForm: React.FC<{
                   required
                   id="name"
                   ref={nameInputRef}
-                  defaultValue={props.project?.name}
+                  defaultValue={project === undefined ? "" : project?.name}
                 />
               </div>
               <div className="flex flex-col p-2">
@@ -97,7 +97,9 @@ const EditProjectForm: React.FC<{
                   required
                   id="email"
                   ref={descInputRef}
-                  defaultValue={props.project?.description}
+                  defaultValue={
+                    project === undefined ? "" : project?.description
+                  }
                 />
               </div>
               <div className="flex flex-col p-2">
@@ -108,7 +110,9 @@ const EditProjectForm: React.FC<{
                   name="roles"
                   id="roles"
                   ref={managerInputRef}
-                  defaultValue={props.project?.manager?.id}
+                  defaultValue={
+                    project === undefined ? "" : project?.manager?.id
+                  }
                 >
                   {props.items.map((item) => (
                     <option key={item.id} value={item.id}>
@@ -129,9 +133,11 @@ const EditProjectForm: React.FC<{
                       name="team"
                       value={item.id}
                       onChange={checkboxChangeHandler}
-                      defaultChecked={props.project?.users!!.some(
-                        (user) => user.id === item.id
-                      )}
+                      defaultChecked={
+                        project === undefined
+                          ? false
+                          : project?.users!!.some((user) => user.id === item.id)
+                      }
                     />
                     <label htmlFor={`team-${item.id}`}>
                       {item.id} {item.name}

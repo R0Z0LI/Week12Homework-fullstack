@@ -4,7 +4,6 @@ import Navbar from "../../components/NavBar";
 import AddProjectForm from "../../components/projects/AddProjectForm";
 import EditProjectForm from "../../components/projects/EditProjectForm";
 import ProjectList from "../../components/projects/ProjectList";
-import AddTaskForm from "../../components/tasks/AddTaskForm";
 import EditTaskForm from "../../components/tasks/EditTaskForm";
 import TasksList from "../../components/tasks/TaskList";
 import { NewProject } from "../../model/newProject";
@@ -27,7 +26,7 @@ export const getServerSideProps = async (context: Context) => {
   const authorizationHeader = `Bearer ${token}`;
   try {
     const taskResponse = await axios.get(
-      `http://localhost:3000/api/task/user/${21}`,
+      `http://localhost:3000/api/task/user/${38}`,
       {
         headers: { Authorization: authorizationHeader },
       }

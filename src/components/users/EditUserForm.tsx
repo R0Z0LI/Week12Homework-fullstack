@@ -3,8 +3,8 @@ import Modal from "react-modal";
 import { NewUser } from "../../model/newUser";
 import { User } from "../../model/user";
 
-const EditUserForm: React.FC<{
-  user: User | undefined;
+const UserForm: React.FC<{
+  user?: User;
   onSubmit: (user: NewUser) => void;
   onClose: () => void;
 }> = (props) => {
@@ -112,4 +112,4 @@ const EditUserForm: React.FC<{
   );
 };
 
-export default EditUserForm;
+export default UserForm;

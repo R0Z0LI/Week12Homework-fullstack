@@ -10,7 +10,7 @@ import { ProjectStatus } from "../../utils/utils";
 const EditTaskForm: React.FC<{
   onSubmit: (task: NewTask) => void;
   onClose: () => void;
-  task: Task | undefined;
+  task?: Task;
   users: User[];
   projects: Project[];
 }> = (props) => {
@@ -18,6 +18,8 @@ const EditTaskForm: React.FC<{
   const descInputRef = useRef<HTMLInputElement>(null);
   const userInputRef = useRef<HTMLSelectElement>(null);
   const projectInputRef = useRef<HTMLSelectElement>(null);
+
+  const [task, setTask] = useState(props.task);
 
   const onSubmitHandler = (event: React.FormEvent) => {
     event.preventDefault();
@@ -71,7 +73,7 @@ const EditTaskForm: React.FC<{
                   required
                   id="name"
                   ref={nameInputRef}
-                  defaultValue={props.task?.name}
+                  defaultValue={task === undefined ? "" : task?.name}
                 />
               </div>
               <div className="flex flex-col p-2">
@@ -84,7 +86,7 @@ const EditTaskForm: React.FC<{
                   required
                   id="email"
                   ref={descInputRef}
-                  defaultValue={props.task?.description}
+                  defaultValue={task === undefined ? "" : task?.description}
                 />
               </div>
               <div className="flex flex-col p-2">
@@ -95,7 +97,7 @@ const EditTaskForm: React.FC<{
                   name="roles"
                   id="roles"
                   ref={userInputRef}
-                  defaultValue={props.task?.user?.id}
+                  defaultValue={task === undefined ? "" : task.user?.id}
                 >
                   {props.users.map((item) => (
                     <option key={item.id} value={item.id}>
@@ -112,7 +114,7 @@ const EditTaskForm: React.FC<{
                   name="roles"
                   id="roles"
                   ref={projectInputRef}
-                  defaultValue={props.task?.project?.id}
+                  defaultValue={task === undefined ? "" : task?.project?.id}
                 >
                   {props.projects.map((item) => (
                     <option key={item.id} value={item.id}>

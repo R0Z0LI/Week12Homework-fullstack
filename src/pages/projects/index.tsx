@@ -97,7 +97,6 @@ function ProjectsPage({
   const [role, setRole] = useState(userAuthContext.isAdmin);
 
   const router = useRouter();
-  console.log(role);
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -167,10 +166,11 @@ function ProjectsPage({
 
   const onAddSubmitHandler = async (
     newProject: NewProject,
-    addedUsers: User[]
+    addedUsers?: User[]
   ) => {
     setShowAddModal(false);
     try {
+      console.log(addedUsers);
       const response = await axios.post(
         "http://localhost:3000/api/project",
         {
@@ -286,7 +286,7 @@ function ProjectsPage({
             Add Project
           </button>
           {showAddModal && (
-            <AddProjectForm
+            <EditProjectForm
               onSubmit={onAddSubmitHandler}
               onClose={() => setShowAddModal(false)}
               items={users}

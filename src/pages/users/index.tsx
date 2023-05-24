@@ -3,9 +3,8 @@ import Navbar from "../../components/NavBar";
 import UsersList from "../../components/users/UserList";
 import { User } from "../../model/user";
 import { useContext, useState } from "react";
-import AddUserForm from "../../components/users/AddUserForm";
 import { NewUser } from "../../model/newUser";
-import EditUserForm from "../../components/users/EditUserForm";
+import UserForm from "../../components/users/EditUserForm";
 import { useRouter } from "next/router";
 import UserAuthContext from "../../store/user-auth";
 
@@ -109,7 +108,6 @@ function UsersPage({
   const onEditSubmitHandler = async (user: NewUser) => {
     setShowUpdateModal(false);
     const authorizationHeader = `Bearer ${token}`;
-    console.log(user);
     try {
       const response = await axios.put(
         `http://localhost:3000/api/user/${editUserId}`,
@@ -192,13 +190,13 @@ function UsersPage({
             Add User
           </button>
           {showAddModal && (
-            <AddUserForm
+            <UserForm
               onSubmit={onAddSubmitHandler}
               onClose={() => setShowAddModal(false)}
             />
           )}
           {showUpdateModal && (
-            <EditUserForm
+            <UserForm
               user={users.find((user) => user.id === editUserId)}
               onSubmit={onEditSubmitHandler}
               onClose={() => setShowUpdateModal(false)}
