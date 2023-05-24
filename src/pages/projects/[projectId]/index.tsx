@@ -10,7 +10,7 @@ import { NewProject } from "../../../model/newProject";
 import { Project } from "../../../model/project";
 import { Task } from "../../../model/task";
 import { User } from "../../../model/user";
-import { ProjectStatus } from "../../../utils/utils";
+import { ProjectStatus, TaskFunction } from "../../../utils/utils";
 
 interface Context {
   req: {
@@ -26,7 +26,7 @@ export const getServerSideProps = async (context: Context) => {
   const authorizationHeader = `Bearer ${token}`;
   try {
     const taskResponse = await axios.get(
-      `http://localhost:3000/api/task/${id}`,
+      `http://localhost:3000/api/task/project/${id}`,
       {
         headers: { Authorization: authorizationHeader },
       }
@@ -71,20 +71,14 @@ function ProjectDetailsPage({
   id: number;
 }) {
   const [tasks, setTasks] = useState<Task[]>(loadedTasks);
-
-  const onDeleteHandler = () => {};
-  const onArchiveHandler = () => {};
-  const onEditHandler = () => {};
   const onChangeStatusHandler = () => {};
 
   return (
     <div>
       <div>
         <TasksList
+          functions={TaskFunction.USER_FUNCTIONS}
           items={tasks}
-          onDelete={onDeleteHandler}
-          onArchive={onArchiveHandler}
-          onEdit={onEditHandler}
           onChangeStatus={onChangeStatusHandler}
         />
       </div>

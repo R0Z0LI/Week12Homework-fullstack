@@ -14,7 +14,7 @@ import { Project } from "../../model/project";
 import { Task, TaskStatus } from "../../model/task";
 import { User } from "../../model/user";
 import UserAuthContext from "../../store/user-auth";
-import { ProjectStatus } from "../../utils/utils";
+import { ProjectStatus, TaskFunction } from "../../utils/utils";
 
 interface Context {
   req: {
@@ -245,7 +245,7 @@ function TaskPage({
       const updatedTasks = tasks.map((task) =>
         task.id === updatedTask.id ? updatedTask : task
       );
-      setProjects(updatedTasks);
+      setTasks(updatedTasks);
       const sortTasks = updatedTasks.filter((task) => !task.isArchived);
       setSortedTasks(sortTasks);
       if (response.status < 300) {
@@ -311,6 +311,7 @@ function TaskPage({
           )}
           <TasksList
             items={sortedTasks}
+            functions={TaskFunction.ADMIN_FUNCTIONS}
             onDelete={onDeleteHandler}
             onArchive={onArchiveHandler}
             onEdit={onEditHandler}

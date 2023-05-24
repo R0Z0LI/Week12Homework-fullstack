@@ -1,19 +1,21 @@
 import { useState } from "react";
 import { Task } from "../../model/task";
+import { TaskFunction } from "../../utils/utils";
 import TaskItem from "./TaskItem";
 import TaskTableHead from "./TaskTableHead";
 
 const TasksList: React.FC<{
-  onDelete: (index: number | undefined) => void;
-  onArchive: (archive: boolean | undefined, id: number) => void;
-  onEdit: (index: number) => void;
+  onDelete?: (index: number | undefined) => void;
+  onArchive?: (archive: boolean | undefined, id: number) => void;
+  onEdit?: (index: number) => void;
   onChangeStatus: (status: string, id: number | undefined) => void;
+  functions: TaskFunction;
   items: Task[];
 }> = (props) => {
   const [tasks, setTasks] = useState<Task[]>(props.items);
 
   const onDeleteHandler = (id: number | undefined) => {
-    if (id !== undefined) {
+    if (id !== undefined && props.onDelete) {
       props.onDelete(id);
     }
   };
@@ -22,13 +24,13 @@ const TasksList: React.FC<{
     archive: boolean | undefined,
     id: number | undefined
   ) => {
-    if (id !== undefined) {
+    if (id !== undefined && archive !== undefined && props.onArchive) {
       props.onArchive(archive, id);
     }
   };
 
   const onEditHandler = (id: number | undefined) => {
-    if (id !== undefined) {
+    if (id !== undefined && props.onEdit) {
       props.onEdit(id);
     }
   };
@@ -41,7 +43,7 @@ const TasksList: React.FC<{
   return (
     <div>
       <ul className="m-4 border-2 border-blue-500">
-        <TaskTableHead />
+        <TaskTableHead function={props.functions} />
         {tasks.map((item, index) => (
           <TaskItem
             key={item.id}
@@ -58,6 +60,7 @@ const TasksList: React.FC<{
             onArchive={onArchiveHandler}
             onEdit={onEditHandler}
             onChangeStatus={onChangeStatusHandler}
+            function={props.functions}
           />
         ))}
       </ul>
