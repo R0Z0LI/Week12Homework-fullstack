@@ -2,8 +2,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import Navbar from "../../components/NavBar";
-import AddProjectForm from "../../components/projects/AddProjectForm";
-import EditProjectForm from "../../components/projects/EditProjectForm";
+import ProjectForm from "../../components/projects/ProjectForm";
 import ProjectList from "../../components/projects/ProjectList";
 import { NewProject } from "../../model/newProject";
 import { Project } from "../../model/project";
@@ -286,14 +285,14 @@ function ProjectsPage({
             Add Project
           </button>
           {showAddModal && (
-            <EditProjectForm
+            <ProjectForm
               onSubmit={onAddSubmitHandler}
               onClose={() => setShowAddModal(false)}
               items={users}
             />
           )}
           {showUpdateModal && (
-            <EditProjectForm
+            <ProjectForm
               project={projects.find((project) => project.id === projectId)}
               onSubmit={onEditSubmitHandler}
               onClose={() => setShowUpdateModal(false)}

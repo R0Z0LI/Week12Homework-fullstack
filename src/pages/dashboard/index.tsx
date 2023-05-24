@@ -1,10 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Navbar from "../../components/NavBar";
-import AddProjectForm from "../../components/projects/AddProjectForm";
-import EditProjectForm from "../../components/projects/EditProjectForm";
+import EditProjectForm from "../../components/projects/ProjectForm";
 import ProjectList from "../../components/projects/ProjectList";
-import EditTaskForm from "../../components/tasks/EditTaskForm";
+import EditTaskForm from "../../components/tasks/TaskForm";
 import TasksList from "../../components/tasks/TaskList";
 import { NewProject } from "../../model/newProject";
 import { NewTask } from "../../model/newTask";

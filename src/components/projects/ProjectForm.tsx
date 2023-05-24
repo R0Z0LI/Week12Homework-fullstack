@@ -1,52 +1,63 @@
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { NewProject } from "../../model/newProject";
-import { NewTask } from "../../model/newTask";
 import { NewUser } from "../../model/newUser";
 import { Project } from "../../model/project";
-import { Task, TaskStatus } from "../../model/task";
 import { User } from "../../model/user";
 import { ProjectStatus } from "../../utils/utils";
 
-const EditTaskForm: React.FC<{
-  onSubmit: (task: NewTask) => void;
+const ProjectForm: React.FC<{
+  onSubmit: (project: NewProject, users?: User[]) => void;
   onClose: () => void;
-  task?: Task;
-  users: User[];
-  projects: Project[];
+  items: User[];
+  project?: Project;
 }> = (props) => {
+  const [project, setProject] = useState(props.project);
+
   const nameInputRef = useRef<HTMLInputElement>(null);
   const descInputRef = useRef<HTMLInputElement>(null);
-  const userInputRef = useRef<HTMLSelectElement>(null);
-  const projectInputRef = useRef<HTMLSelectElement>(null);
+  const managerInputRef = useRef<HTMLSelectElement>(null);
+  const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
 
-  const [task, setTask] = useState(props.task);
+  useEffect(() => {
+    if (props.project) {
+      setSelectedUsers(props.project.users || []);
+    }
+  }, [props.project]);
+
+  const checkboxChangeHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const userId = Number(event.target.value);
+    const user = props.items.find((user) => user.id === userId);
+
+    if (event.target.checked && user) {
+      setSelectedUsers((prevUsers) => [...prevUsers, user]);
+    } else {
+      setSelectedUsers((prevUsers) => prevUsers.filter((u) => u.id !== userId));
+    }
+  };
 
   const onSubmitHandler = (event: React.FormEvent) => {
     event.preventDefault();
     const name = nameInputRef.current?.value;
     const description = descInputRef.current?.value;
-    const userValue = userInputRef.current?.value;
-    const userArray = userValue?.split(" ");
+    const managerValue = managerInputRef.current?.value;
+    const managerArray = managerValue?.split(" ");
 
-    const userId = userArray ? +userArray[0] : undefined;
-    const projectValue = projectInputRef.current?.value;
-    const projectArray = projectValue?.split(" ");
-    const projectId = projectArray ? +projectArray[0] : undefined;
-    const status: TaskStatus = TaskStatus.TODO;
-
-    const user = props.users.find((item) => item.id === userId);
-    const project = props.projects.find((item) => item.id === projectId);
+    const managerId = managerArray ? +managerArray[0] : undefined;
+    const status: ProjectStatus = ProjectStatus.ACTIVE;
+    const manager = props.items.find((item) => item.id === managerId);
     const isArchived = false;
 
-    const newTask: NewTask = {
+    const newProject: Project = {
       name,
       description,
       isArchived,
       status,
-      user,
-      project,
+      manager,
+      users: selectedUsers,
     };
-    props.onSubmit(newTask);
+    props.onSubmit(newProject, selectedUsers);
   };
 
   return (
@@ -73,7 +84,7 @@ const EditTaskForm: React.FC<{
                   required
                   id="name"
                   ref={nameInputRef}
-                  defaultValue={task === undefined ? "" : task?.name}
+                  defaultValue={project === undefined ? "" : project?.name}
                 />
               </div>
               <div className="flex flex-col p-2">
@@ -86,20 +97,24 @@ const EditTaskForm: React.FC<{
                   required
                   id="email"
                   ref={descInputRef}
-                  defaultValue={task === undefined ? "" : task?.description}
+                  defaultValue={
+                    project === undefined ? "" : project?.description
+                  }
                 />
               </div>
               <div className="flex flex-col p-2">
                 <label htmlFor="roles" className="pb-1 ">
-                  User
+                  Manager
                 </label>
                 <select
                   name="roles"
                   id="roles"
-                  ref={userInputRef}
-                  defaultValue={task === undefined ? "" : task.user?.id}
+                  ref={managerInputRef}
+                  defaultValue={
+                    project === undefined ? "" : project?.manager?.id
+                  }
                 >
-                  {props.users.map((item) => (
+                  {props.items.map((item) => (
                     <option key={item.id} value={item.id}>
                       {item.id} {item.name}
                     </option>
@@ -107,23 +122,29 @@ const EditTaskForm: React.FC<{
                 </select>
               </div>
               <div className="flex flex-col p-2">
-                <label htmlFor="roles" className="pb-1 ">
-                  Project
+                <label htmlFor="team" className="pb-1 ">
+                  Users
                 </label>
-                <select
-                  name="roles"
-                  id="roles"
-                  ref={projectInputRef}
-                  defaultValue={task === undefined ? "" : task?.project?.id}
-                >
-                  {props.projects.map((item) => (
-                    <option key={item.id} value={item.id}>
+                {props.items.map((item) => (
+                  <div key={item.id}>
+                    <input
+                      type="checkbox"
+                      id={`team-${item.id}`}
+                      name="team"
+                      value={item.id}
+                      onChange={checkboxChangeHandler}
+                      defaultChecked={
+                        project === undefined
+                          ? false
+                          : project?.users!!.some((user) => user.id === item.id)
+                      }
+                    />
+                    <label htmlFor={`team-${item.id}`}>
                       {item.id} {item.name}
-                    </option>
-                  ))}
-                </select>
+                    </label>
+                  </div>
+                ))}
               </div>
-              <div className="flex flex-col p-2"></div>
               <button className="border-2 border-black rounded-lg m-2 p-1 ">
                 Submit
               </button>
@@ -135,4 +156,4 @@ const EditTaskForm: React.FC<{
   );
 };
 
-export default EditTaskForm;
+export default ProjectForm;

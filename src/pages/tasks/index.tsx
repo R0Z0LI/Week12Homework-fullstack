@@ -2,7 +2,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import Navbar from "../../components/NavBar";
-import EditTaskForm from "../../components/tasks/EditTaskForm";
+import TaskForm from "../../components/tasks/TaskForm";
 import TasksList from "../../components/tasks/TaskList";
 import { NewTask } from "../../model/newTask";
 import { Project } from "../../model/project";
@@ -288,7 +288,7 @@ function TaskPage({
             Add Task
           </button>
           {showAddModal && (
-            <EditTaskForm
+            <TaskForm
               onSubmit={onAddSubmitHandler}
               onClose={() => setShowAddModal(false)}
               users={users}
@@ -296,7 +296,7 @@ function TaskPage({
             />
           )}
           {showUpdateModal && (
-            <EditTaskForm
+            <TaskForm
               onSubmit={onEditSubmitHandler}
               onClose={() => setShowAddModal(false)}
               users={users}
