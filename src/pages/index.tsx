@@ -95,10 +95,10 @@ export default function Home({
           password,
         }
       );
-      console.log(response.data);
       const token = response.data.access_token;
       const isAdmin = response.data.role;
       const isSuspended = response.data.suspended;
+      Cookies.set("id", response.data.id);
       if (isSuspended) {
         setSuspended(true);
       } else {

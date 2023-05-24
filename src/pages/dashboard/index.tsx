@@ -1,4 +1,5 @@
 import axios from "axios";
+import Cookies from "js-cookie";
 import { useContext, useEffect, useState } from "react";
 import Navbar from "../../components/NavBar";
 import EditProjectForm from "../../components/projects/ProjectForm";
@@ -23,10 +24,12 @@ interface Context {
 
 export const getServerSideProps = async (context: Context) => {
   const token = context.req.cookies.token;
+
+  const id = context.req.cookies.id;
   const authorizationHeader = `Bearer ${token}`;
   try {
     const taskResponse = await axios.get(
-      `http://localhost:3000/api/task/user/${38}`,
+      `http://localhost:3000/api/task/user/${id}`,
       {
         headers: { Authorization: authorizationHeader },
       }
