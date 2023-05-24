@@ -6,6 +6,7 @@ import { useState } from "react";
 import AddUserForm from "../../components/users/AddUserForm";
 import { NewUser } from "../../model/newUser";
 import EditUserForm from "../../components/users/EditUserForm";
+import { useRouter } from "next/router";
 
 interface Context {
   req: {
@@ -17,6 +18,7 @@ interface Context {
 
 export const getServerSideProps = async (context: Context) => {
   const token = context.req.cookies.token;
+  const admin = context.req.cookies.role;
   const authorizationHeader = `Bearer ${token}`;
   try {
     const response = await axios.get("http://localhost:3000/api/user", {
@@ -37,6 +39,7 @@ export const getServerSideProps = async (context: Context) => {
       props: {
         loadedUsers: JSON.parse(JSON.stringify(users)),
         token: token,
+        admin: admin,
       },
     };
   } catch (error) {
@@ -44,6 +47,7 @@ export const getServerSideProps = async (context: Context) => {
       props: {
         loadedUsers: [],
         token: token,
+        admin: admin,
       },
     };
   }
@@ -52,16 +56,21 @@ export const getServerSideProps = async (context: Context) => {
 function UsersPage({
   loadedUsers,
   token,
+  admin,
 }: {
   loadedUsers: User[];
   token: string;
+  admin: string;
 }) {
   const [refreshKey, setRefreshKey] = useState<number>(0);
   const [users, setUsers] = useState<User[]>(loadedUsers);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [editUserId, setEditUserId] = useState(0);
-
+  const router = useRouter();
+  const [role, setRole] = useState(admin);
+  console.log(role);
+  console.log(role);
   const onDeleteHandler = async (id: number | undefined) => {
     const authorizationHeader = `Bearer ${token}`;
     try {
@@ -157,34 +166,55 @@ function UsersPage({
     setRefreshKey((oldKey) => oldKey + 1);
   };
 
+  const onLoginHandler = () => {
+    router.push("/");
+  };
+
+  const onDashboardHandler = () => {
+    router.push("/dashboard");
+  };
+
   return (
     <div key={refreshKey} className="flex flex-col">
-      <Navbar />
-      <button
-        className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 self-end mr-4"
-        onClick={() => setShowAddModal(true)}
-      >
-        Add User
-      </button>
-      {showAddModal && (
-        <AddUserForm
-          onSubmit={onAddSubmitHandler}
-          onClose={() => setShowAddModal(false)}
-        />
+      {role === "false" && (
+        <div>
+          <p>You don't have permisson to for this page</p>
+          <p>Please login with an admin accout to access this page</p>
+          <button onClick={onLoginHandler}>Login page</button>
+          <p>Or check your tasks</p>
+          <button onClick={onDashboardHandler}>Dashboard page</button>
+        </div>
       )}
-      {showUpdateModal && (
-        <EditUserForm
-          user={users.find((user) => user.id === editUserId)}
-          onSubmit={onEditSubmitHandler}
-          onClose={() => setShowUpdateModal(false)}
-        />
+      {role === "true" && (
+        <div>
+          <Navbar />
+          <button
+            className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 self-end mr-4"
+            onClick={() => setShowAddModal(true)}
+          >
+            Add User
+          </button>
+          {showAddModal && (
+            <AddUserForm
+              onSubmit={onAddSubmitHandler}
+              onClose={() => setShowAddModal(false)}
+            />
+          )}
+          {showUpdateModal && (
+            <EditUserForm
+              user={users.find((user) => user.id === editUserId)}
+              onSubmit={onEditSubmitHandler}
+              onClose={() => setShowUpdateModal(false)}
+            />
+          )}
+          <UsersList
+            items={users}
+            onDelete={onDeleteHandler}
+            onSuspend={onSuspendHandler}
+            onEdit={onEditHandler}
+          />
+        </div>
       )}
-      <UsersList
-        items={users}
-        onDelete={onDeleteHandler}
-        onSuspend={onSuspendHandler}
-        onEdit={onEditHandler}
-      />
     </div>
   );
 }

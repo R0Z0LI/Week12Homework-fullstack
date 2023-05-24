@@ -34,7 +34,6 @@ const EditTaskForm: React.FC<{
 
     const user = props.users.find((item) => item.id === userId);
     const project = props.projects.find((item) => item.id === projectId);
-    console.log(project);
     const isArchived = false;
 
     const newTask: NewTask = {

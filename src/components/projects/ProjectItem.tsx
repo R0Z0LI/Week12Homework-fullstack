@@ -4,6 +4,8 @@ import { mdiDelete, mdiFileEdit, mdiArchiveArrowDown } from "@mdi/js";
 import { Project } from "../../model/project";
 import { useState } from "react";
 import { ProjectStatus } from "../../utils/utils";
+import { useRouter } from "next/router";
+import Cookies from "js-cookie";
 
 const ProjectItem: React.FC<{
   id: number | undefined;
@@ -20,6 +22,8 @@ const ProjectItem: React.FC<{
   onChangeStatus: (status: string, id: number | undefined) => void;
 }> = (props) => {
   const [selectedStatus, setSelectedStatus] = useState(props.status);
+
+  const router = useRouter();
 
   const onDeleteHandler = () => {
     props.onDelete(props.id);
@@ -41,6 +45,14 @@ const ProjectItem: React.FC<{
     props.onChangeStatus(event.target.value, props.id);
   };
 
+  const onClickHandler = () => {
+    if (props.id !== undefined) {
+      const id = props.id?.toString();
+      Cookies.set("id", id);
+      router.push(`/projects/${props.id}`);
+    }
+  };
+
   return (
     <li
       className="p-3 grid gap-4 border-2 border-blue-500 hover:bg-blue-300"
@@ -52,7 +64,7 @@ const ProjectItem: React.FC<{
       <div className="p-1">
         <p>{props.id}</p>
       </div>
-      <div className="p-1">
+      <div className="p-1" onClick={onClickHandler}>
         <p>{props.name}</p>
       </div>
       <div className="p-1">

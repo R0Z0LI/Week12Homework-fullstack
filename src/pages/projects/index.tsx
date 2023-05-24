@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Navbar from "../../components/NavBar";
 import AddProjectForm from "../../components/projects/AddProjectForm";
@@ -19,6 +20,7 @@ interface Context {
 
 export const getServerSideProps = async (context: Context) => {
   const token = context.req.cookies.token;
+  const admin = context.req.cookies.role;
   const authorizationHeader = `Bearer ${token}`;
   try {
     const userResponse = await axios.get("http://localhost:3000/api/user", {
@@ -60,6 +62,7 @@ export const getServerSideProps = async (context: Context) => {
         loadedUsers: JSON.parse(JSON.stringify(users)),
         loadedProjects: JSON.parse(JSON.stringify(projects)),
         token: token,
+        admin: admin,
       },
     };
   } catch (error) {
@@ -68,6 +71,7 @@ export const getServerSideProps = async (context: Context) => {
         loadedUsers: [],
         loadedProjects: [],
         token: token,
+        admin: admin,
       },
     };
   }
@@ -77,10 +81,12 @@ function ProjectsPage({
   loadedUsers,
   loadedProjects,
   token,
+  admin,
 }: {
   loadedUsers: User[];
   loadedProjects: Project[];
   token: string;
+  admin: string;
 }) {
   const [users, setUsers] = useState<User[]>(loadedUsers);
   const [projects, setProjects] = useState<Project[]>(loadedProjects);
@@ -89,6 +95,11 @@ function ProjectsPage({
   const [refreshKey, setRefreshKey] = useState<number>(0);
 
   const [projectId, setProjectId] = useState(0);
+
+  const [role, setRole] = useState(admin);
+
+  const router = useRouter();
+  console.log(role);
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -242,43 +253,64 @@ function ProjectsPage({
     setRefreshKey((oldKey) => oldKey + 1);
   };
 
+  const onLoginHandler = () => {
+    router.push("/");
+  };
+
+  const onDashboardHandler = () => {
+    router.push("/dashboard");
+  };
+
   return (
     <div key={refreshKey} className="flex flex-col">
-      <Navbar />
-      <button
-        className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 self-start mr-4"
-        onClick={() => setShowArchived((prev) => !prev)}
-      >
-        {showArchived ? "Hide Archived Projects" : "Show Archived Projects"}
-      </button>
-      <button
-        className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 self-end mr-4"
-        onClick={() => setShowAddModal(true)}
-      >
-        Add Project
-      </button>
-      {showAddModal && (
-        <AddProjectForm
-          onSubmit={onAddSubmitHandler}
-          onClose={() => setShowAddModal(false)}
-          items={users}
-        />
+      {role === "false" && (
+        <div>
+          <p>You don't have permisson to for this page</p>
+          <p>Please login with an admin accout to access this page</p>
+          <button onClick={onLoginHandler}>Login page</button>
+          <p>Or check your tasks</p>
+          <button onClick={onDashboardHandler}>Dashboard page</button>
+        </div>
       )}
-      {showUpdateModal && (
-        <EditProjectForm
-          project={projects.find((project) => project.id === projectId)}
-          onSubmit={onEditSubmitHandler}
-          onClose={() => setShowUpdateModal(false)}
-          items={users}
-        />
+      {role === "true" && (
+        <div>
+          <Navbar />
+          <button
+            className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 self-start mr-4"
+            onClick={() => setShowArchived((prev) => !prev)}
+          >
+            {showArchived ? "Hide Archived Projects" : "Show Archived Projects"}
+          </button>
+          <button
+            className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 self-end mr-4"
+            onClick={() => setShowAddModal(true)}
+          >
+            Add Project
+          </button>
+          {showAddModal && (
+            <AddProjectForm
+              onSubmit={onAddSubmitHandler}
+              onClose={() => setShowAddModal(false)}
+              items={users}
+            />
+          )}
+          {showUpdateModal && (
+            <EditProjectForm
+              project={projects.find((project) => project.id === projectId)}
+              onSubmit={onEditSubmitHandler}
+              onClose={() => setShowUpdateModal(false)}
+              items={users}
+            />
+          )}
+          <ProjectList
+            items={sortedProjects}
+            onDelete={onDeleteHandler}
+            onArchive={onArchiveHandler}
+            onEdit={onEditHandler}
+            onChangeStatus={onChangeStatusHandler}
+          />
+        </div>
       )}
-      <ProjectList
-        items={sortedProjects}
-        onDelete={onDeleteHandler}
-        onArchive={onArchiveHandler}
-        onEdit={onEditHandler}
-        onChangeStatus={onChangeStatusHandler}
-      />
     </div>
   );
 }

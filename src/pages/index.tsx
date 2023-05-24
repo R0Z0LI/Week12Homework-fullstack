@@ -15,11 +15,18 @@ export default function Home() {
           password,
         }
       );
+      console.log(response);
       const token = response.data.access_token;
+      const isAdmin = response.data.role;
       Cookies.set("token", token);
-      router.push("/users");
+      Cookies.set("role", isAdmin);
+      if (isAdmin) {
+        router.push("/users");
+      } else {
+        router.push("/dashboard");
+      }
     } catch (error) {
-      throw error;
+      console.log("ERROR");
     }
   };
 

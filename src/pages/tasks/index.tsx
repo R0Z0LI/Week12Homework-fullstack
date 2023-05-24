@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Navbar from "../../components/NavBar";
 import AddProjectForm from "../../components/projects/AddProjectForm";
@@ -24,24 +25,22 @@ interface Context {
 
 export const getServerSideProps = async (context: Context) => {
   const token = context.req.cookies.token;
+  const admin = context.req.cookies.role;
   const authorizationHeader = `Bearer ${token}`;
   try {
     const userResponse = await axios.get("http://localhost:3000/api/user", {
       headers: { Authorization: authorizationHeader },
     });
     const userData = userResponse.data;
-    const users = await userData
-      .map((user: User) => ({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        password: user.password,
-        lastLogin: user.lastLogin,
-        isSuspended: user.isSuspended,
-        isAdmin: user.isAdmin,
-      }))
-      .slice()
-      .reverse();
+    const users = await userData.map((user: User) => ({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      lastLogin: user.lastLogin,
+      isSuspended: user.isSuspended,
+      isAdmin: user.isAdmin,
+    }));
     const projectResponse = await axios.get(
       "http://localhost:3000/api/project",
       {
@@ -81,6 +80,7 @@ export const getServerSideProps = async (context: Context) => {
         loadedProjects: JSON.parse(JSON.stringify(projects)),
         loadedTasks: JSON.parse(JSON.stringify(tasks)),
         token: token,
+        role: admin,
       },
     };
   } catch (error) {
@@ -90,6 +90,7 @@ export const getServerSideProps = async (context: Context) => {
         loadedProjects: [],
         loadedTasks: [],
         token: token,
+        role: admin,
       },
     };
   }
@@ -100,11 +101,13 @@ function TaskPage({
   loadedProjects,
   loadedTasks,
   token,
+  role,
 }: {
   loadedUsers: User[];
   loadedProjects: Project[];
   loadedTasks: Task[];
   token: string;
+  role: string;
 }) {
   const [users, setUsers] = useState<User[]>(loadedUsers);
   const [projects, setProjects] = useState<Project[]>(loadedProjects);
@@ -119,7 +122,11 @@ function TaskPage({
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
 
+  const [isAdmin, setIsAdmin] = useState(role);
+
   const authorizationHeader = `Bearer ${token}`;
+
+  const router = useRouter();
 
   useEffect(() => {
     if (showArchived) {
@@ -228,7 +235,6 @@ function TaskPage({
     id: number | undefined
   ) => {
     const statusToUpdate = status as TaskStatus;
-    console.log(statusToUpdate);
     try {
       const response = await axios.put(
         `http://localhost:3000/api/task/status/${id}`,
@@ -254,45 +260,66 @@ function TaskPage({
     setRefreshKey((oldKey) => oldKey + 1);
   };
 
+  const onLoginHandler = () => {
+    router.push("/");
+  };
+
+  const onDashboardHandler = () => {
+    router.push("/dashboard");
+  };
+
   return (
     <div key={refreshKey} className="flex flex-col">
-      <Navbar />
-      <button
-        className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 self-start mr-4"
-        onClick={() => setShowArchived((prev) => !prev)}
-      >
-        {showArchived ? "Hide Archived Tasks" : "Show Archived Tasks"}
-      </button>
-      <button
-        className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 self-end mr-4"
-        onClick={() => setShowAddModal(true)}
-      >
-        Add Task
-      </button>
-      {showAddModal && (
-        <AddTaskForm
-          onSubmit={onAddSubmitHandler}
-          onClose={() => setShowAddModal(false)}
-          users={users}
-          projects={projects}
-        />
+      {role === "false" && (
+        <div>
+          <p>You don't have permisson to for this page</p>
+          <p>Please login with an admin accout to access this page</p>
+          <button onClick={onLoginHandler}>Login page</button>
+          <p>Or check your tasks</p>
+          <button onClick={onDashboardHandler}>Dashboard page</button>
+        </div>
       )}
-      {showUpdateModal && (
-        <EditTaskForm
-          onSubmit={onEditSubmitHandler}
-          onClose={() => setShowAddModal(false)}
-          users={users}
-          projects={projects}
-          task={tasks.find((task) => task.id === taskId)}
-        />
+      {isAdmin === "true" && (
+        <div>
+          <Navbar />
+          <button
+            className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 self-start mr-4"
+            onClick={() => setShowArchived((prev) => !prev)}
+          >
+            {showArchived ? "Hide Archived Tasks" : "Show Archived Tasks"}
+          </button>
+          <button
+            className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 self-end mr-4"
+            onClick={() => setShowAddModal(true)}
+          >
+            Add Task
+          </button>
+          {showAddModal && (
+            <AddTaskForm
+              onSubmit={onAddSubmitHandler}
+              onClose={() => setShowAddModal(false)}
+              users={users}
+              projects={projects}
+            />
+          )}
+          {showUpdateModal && (
+            <EditTaskForm
+              onSubmit={onEditSubmitHandler}
+              onClose={() => setShowAddModal(false)}
+              users={users}
+              projects={projects}
+              task={tasks.find((task) => task.id === taskId)}
+            />
+          )}
+          <TasksList
+            items={sortedTasks}
+            onDelete={onDeleteHandler}
+            onArchive={onArchiveHandler}
+            onEdit={onEditHandler}
+            onChangeStatus={onChangeStatusHandler}
+          />
+        </div>
       )}
-      <TasksList
-        items={sortedTasks}
-        onDelete={onDeleteHandler}
-        onArchive={onArchiveHandler}
-        onEdit={onEditHandler}
-        onChangeStatus={onChangeStatusHandler}
-      />
     </div>
   );
 }
