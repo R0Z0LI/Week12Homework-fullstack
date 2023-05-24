@@ -125,25 +125,29 @@ const ProjectForm: React.FC<{
                 <label htmlFor="team" className="pb-1 ">
                   Users
                 </label>
-                {props.items.map((item) => (
-                  <div key={item.id}>
-                    <input
-                      type="checkbox"
-                      id={`team-${item.id}`}
-                      name="team"
-                      value={item.id}
-                      onChange={checkboxChangeHandler}
-                      defaultChecked={
-                        project === undefined
-                          ? false
-                          : project?.users!!.some((user) => user.id === item.id)
-                      }
-                    />
-                    <label htmlFor={`team-${item.id}`}>
-                      {item.id} {item.name}
-                    </label>
-                  </div>
-                ))}
+                <div style={{ height: "100px", overflowY: "auto" }}>
+                  {props.items.map((item) => (
+                    <div key={item.id}>
+                      <input
+                        type="checkbox"
+                        id={`team-${item.id}`}
+                        name="team"
+                        value={item.id}
+                        onChange={checkboxChangeHandler}
+                        defaultChecked={
+                          project === undefined
+                            ? false
+                            : project?.users!!.some(
+                                (user) => user.id === item.id
+                              )
+                        }
+                      />
+                      <label htmlFor={`team-${item.id}`}>
+                        {item.id} {item.name}
+                      </label>
+                    </div>
+                  ))}
+                </div>
               </div>
               <button className="border-2 border-black rounded-lg m-2 p-1 ">
                 Submit
