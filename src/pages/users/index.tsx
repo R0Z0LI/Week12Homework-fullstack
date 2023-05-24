@@ -2,11 +2,12 @@ import axios from "axios";
 import Navbar from "../../components/NavBar";
 import UsersList from "../../components/users/UserList";
 import { User } from "../../model/user";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import AddUserForm from "../../components/users/AddUserForm";
 import { NewUser } from "../../model/newUser";
 import EditUserForm from "../../components/users/EditUserForm";
 import { useRouter } from "next/router";
+import UserAuthContext from "../../store/user-auth";
 
 interface Context {
   req: {
@@ -18,7 +19,6 @@ interface Context {
 
 export const getServerSideProps = async (context: Context) => {
   const token = context.req.cookies.token;
-  const admin = context.req.cookies.role;
   const authorizationHeader = `Bearer ${token}`;
   try {
     const response = await axios.get("http://localhost:3000/api/user", {
@@ -39,7 +39,6 @@ export const getServerSideProps = async (context: Context) => {
       props: {
         loadedUsers: JSON.parse(JSON.stringify(users)),
         token: token,
-        admin: admin,
       },
     };
   } catch (error) {
@@ -47,7 +46,6 @@ export const getServerSideProps = async (context: Context) => {
       props: {
         loadedUsers: [],
         token: token,
-        admin: admin,
       },
     };
   }
@@ -56,11 +54,9 @@ export const getServerSideProps = async (context: Context) => {
 function UsersPage({
   loadedUsers,
   token,
-  admin,
 }: {
   loadedUsers: User[];
   token: string;
-  admin: string;
 }) {
   const [refreshKey, setRefreshKey] = useState<number>(0);
   const [users, setUsers] = useState<User[]>(loadedUsers);
@@ -68,7 +64,8 @@ function UsersPage({
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [editUserId, setEditUserId] = useState(0);
   const router = useRouter();
-  const [role, setRole] = useState(admin);
+  const userAuthCtx = useContext(UserAuthContext);
+  const [role, setRole] = useState(userAuthCtx.isAdmin);
   console.log(role);
   console.log(role);
   const onDeleteHandler = async (id: number | undefined) => {
@@ -176,7 +173,7 @@ function UsersPage({
 
   return (
     <div key={refreshKey} className="flex flex-col">
-      {role === "false" && (
+      {!role && (
         <div>
           <p>You don't have permisson to for this page</p>
           <p>Please login with an admin accout to access this page</p>
@@ -185,7 +182,7 @@ function UsersPage({
           <button onClick={onDashboardHandler}>Dashboard page</button>
         </div>
       )}
-      {role === "true" && (
+      {role && (
         <div>
           <Navbar />
           <button

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Navbar from "../../components/NavBar";
 import AddProjectForm from "../../components/projects/AddProjectForm";
 import EditProjectForm from "../../components/projects/EditProjectForm";
@@ -13,6 +13,7 @@ import { NewTask } from "../../model/newTask";
 import { Project } from "../../model/project";
 import { Task, TaskStatus } from "../../model/task";
 import { User } from "../../model/user";
+import UserAuthContext from "../../store/user-auth";
 import { ProjectStatus } from "../../utils/utils";
 
 interface Context {
@@ -25,7 +26,6 @@ interface Context {
 
 export const getServerSideProps = async (context: Context) => {
   const token = context.req.cookies.token;
-  const admin = context.req.cookies.role;
   const authorizationHeader = `Bearer ${token}`;
   try {
     const userResponse = await axios.get("http://localhost:3000/api/user", {
@@ -80,7 +80,6 @@ export const getServerSideProps = async (context: Context) => {
         loadedProjects: JSON.parse(JSON.stringify(projects)),
         loadedTasks: JSON.parse(JSON.stringify(tasks)),
         token: token,
-        role: admin,
       },
     };
   } catch (error) {
@@ -90,7 +89,6 @@ export const getServerSideProps = async (context: Context) => {
         loadedProjects: [],
         loadedTasks: [],
         token: token,
-        role: admin,
       },
     };
   }
@@ -101,13 +99,11 @@ function TaskPage({
   loadedProjects,
   loadedTasks,
   token,
-  role,
 }: {
   loadedUsers: User[];
   loadedProjects: Project[];
   loadedTasks: Task[];
   token: string;
-  role: string;
 }) {
   const [users, setUsers] = useState<User[]>(loadedUsers);
   const [projects, setProjects] = useState<Project[]>(loadedProjects);
@@ -122,7 +118,9 @@ function TaskPage({
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
 
-  const [isAdmin, setIsAdmin] = useState(role);
+  const userAuthCtx = useContext(UserAuthContext);
+
+  const [isAdmin, setIsAdmin] = useState(userAuthCtx.isAdmin);
 
   const authorizationHeader = `Bearer ${token}`;
 
@@ -270,7 +268,7 @@ function TaskPage({
 
   return (
     <div key={refreshKey} className="flex flex-col">
-      {role === "false" && (
+      {!isAdmin && (
         <div>
           <p>You don't have permisson to for this page</p>
           <p>Please login with an admin accout to access this page</p>
@@ -279,7 +277,7 @@ function TaskPage({
           <button onClick={onDashboardHandler}>Dashboard page</button>
         </div>
       )}
-      {isAdmin === "true" && (
+      {isAdmin && (
         <div>
           <Navbar />
           <button

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Navbar from "../../components/NavBar";
 import AddProjectForm from "../../components/projects/AddProjectForm";
 import EditProjectForm from "../../components/projects/EditProjectForm";
@@ -8,6 +8,7 @@ import ProjectList from "../../components/projects/ProjectList";
 import { NewProject } from "../../model/newProject";
 import { Project } from "../../model/project";
 import { User } from "../../model/user";
+import UserAuthContext from "../../store/user-auth";
 import { ProjectStatus } from "../../utils/utils";
 
 interface Context {
@@ -20,7 +21,6 @@ interface Context {
 
 export const getServerSideProps = async (context: Context) => {
   const token = context.req.cookies.token;
-  const admin = context.req.cookies.role;
   const authorizationHeader = `Bearer ${token}`;
   try {
     const userResponse = await axios.get("http://localhost:3000/api/user", {
@@ -62,7 +62,6 @@ export const getServerSideProps = async (context: Context) => {
         loadedUsers: JSON.parse(JSON.stringify(users)),
         loadedProjects: JSON.parse(JSON.stringify(projects)),
         token: token,
-        admin: admin,
       },
     };
   } catch (error) {
@@ -71,7 +70,6 @@ export const getServerSideProps = async (context: Context) => {
         loadedUsers: [],
         loadedProjects: [],
         token: token,
-        admin: admin,
       },
     };
   }
@@ -81,12 +79,10 @@ function ProjectsPage({
   loadedUsers,
   loadedProjects,
   token,
-  admin,
 }: {
   loadedUsers: User[];
   loadedProjects: Project[];
   token: string;
-  admin: string;
 }) {
   const [users, setUsers] = useState<User[]>(loadedUsers);
   const [projects, setProjects] = useState<Project[]>(loadedProjects);
@@ -96,7 +92,9 @@ function ProjectsPage({
 
   const [projectId, setProjectId] = useState(0);
 
-  const [role, setRole] = useState(admin);
+  const userAuthContext = useContext(UserAuthContext);
+
+  const [role, setRole] = useState(userAuthContext.isAdmin);
 
   const router = useRouter();
   console.log(role);
@@ -263,7 +261,7 @@ function ProjectsPage({
 
   return (
     <div key={refreshKey} className="flex flex-col">
-      {role === "false" && (
+      {!role && (
         <div>
           <p>You don't have permisson to for this page</p>
           <p>Please login with an admin accout to access this page</p>
@@ -272,7 +270,7 @@ function ProjectsPage({
           <button onClick={onDashboardHandler}>Dashboard page</button>
         </div>
       )}
-      {role === "true" && (
+      {role && (
         <div>
           <Navbar />
           <button
