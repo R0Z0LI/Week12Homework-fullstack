@@ -183,12 +183,15 @@ function UsersPage({
       {role && (
         <div>
           <Navbar />
-          <button
-            className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 self-end mr-4"
-            onClick={() => setShowAddModal(true)}
-          >
-            Add User
-          </button>
+
+          <div className="flex justify-end">
+            <button
+              className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 mr-4 ml-4"
+              onClick={() => setShowAddModal(true)}
+            >
+              Add User
+            </button>
+          </div>
           {showAddModal && (
             <UserForm
               onSubmit={onAddSubmitHandler}

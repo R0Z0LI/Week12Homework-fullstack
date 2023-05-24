@@ -275,18 +275,20 @@ function TaskPage({
       {isAdmin && (
         <div>
           <Navbar />
-          <button
-            className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 self-start mr-4"
-            onClick={() => setShowArchived((prev) => !prev)}
-          >
-            {showArchived ? "Hide Archived Tasks" : "Show Archived Tasks"}
-          </button>
-          <button
-            className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 self-end mr-4"
-            onClick={() => setShowAddModal(true)}
-          >
-            Add Task
-          </button>
+          <div className="flex justify-between">
+            <button
+              className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 mr-4 ml-4"
+              onClick={() => setShowArchived((prev) => !prev)}
+            >
+              {showArchived ? "Hide Archived Tasks" : "Show Archived Tasks"}
+            </button>
+            <button
+              className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 mr-4"
+              onClick={() => setShowAddModal(true)}
+            >
+              Add Task
+            </button>
+          </div>
           {showAddModal && (
             <TaskForm
               onSubmit={onAddSubmitHandler}

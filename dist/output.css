@@ -610,6 +610,10 @@ video {
   width: 20%;
 }
 
+.w-full {
+  width: 100%;
+}
+
 .grid-cols-6 {
   grid-template-columns: repeat(6, minmax(0, 1fr));
 }
@@ -652,6 +656,10 @@ video {
 
 .justify-between {
   justify-content: space-between;
+}
+
+.justify-stretch {
+  justify-content: stretch;
 }
 
 .gap-4 {

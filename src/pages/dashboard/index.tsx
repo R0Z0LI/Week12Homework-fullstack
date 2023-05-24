@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Navbar from "../../components/NavBar";
 import EditProjectForm from "../../components/projects/ProjectForm";
 import ProjectList from "../../components/projects/ProjectList";
@@ -10,6 +10,7 @@ import { NewTask } from "../../model/newTask";
 import { Project } from "../../model/project";
 import { Task, TaskStatus } from "../../model/task";
 import { User } from "../../model/user";
+import UserAuthContext from "../../store/user-auth";
 import { ProjectStatus, TaskFunction } from "../../utils/utils";
 
 interface Context {
@@ -104,6 +105,7 @@ function ProjectDetailsPage({
   return (
     <div>
       <div>
+        <Navbar />
         <TasksList
           functions={TaskFunction.USER_FUNCTIONS}
           items={tasks}
