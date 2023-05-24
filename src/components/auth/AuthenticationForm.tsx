@@ -19,8 +19,8 @@ const AuthenticationForm: React.FC<{
   };
 
   return (
-    <div className="m-10 py-4 px-6  rounded-lg">
-      <p className="text-xl">Signing in</p>
+    <div className="rounded-lg border-blue-500 border-4">
+      <p className="text-xl text-center pt-2">Signing in</p>
       <form className="p-2" onSubmit={onSubmitHandler}>
         <div className="flex flex-col p-2">
           <label htmlFor="name" className="pb-1 ">

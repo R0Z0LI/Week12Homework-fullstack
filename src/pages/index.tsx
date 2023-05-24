@@ -2,7 +2,7 @@ import AuthenticationForm from "../components/auth/AuthenticationForm";
 import axios from "axios";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import UserAuthContext from "../store/user-auth";
 
 interface Context {
@@ -33,7 +33,6 @@ export const getServerSideProps = async (context: Context) => {
       props: {
         isAdmin: isAdmin,
         isLoggedIn: isLoggedIn,
-        token: token,
       },
     };
   } catch (error) {
@@ -41,7 +40,6 @@ export const getServerSideProps = async (context: Context) => {
       props: {
         isLoggedIn: isLoggedIn,
         isAdmin: isAdmin,
-        token: token,
       },
     };
   }
@@ -56,6 +54,25 @@ export default function Home({
 }) {
   const router = useRouter();
   const userAuthCtx = useContext(UserAuthContext);
+
+  const [suspended, setSuspended] = useState(false);
+  const [invalid, setInvalid] = useState(false);
+
+  useEffect(() => {
+    if (suspended) {
+      setTimeout(() => {
+        setSuspended(false);
+      }, 2000);
+    }
+  }, [suspended]);
+
+  useEffect(() => {
+    if (invalid) {
+      setTimeout(() => {
+        setInvalid(false);
+      }, 2000);
+    }
+  }, [invalid]);
 
   console.log(isAdmin);
   useEffect(() => {
@@ -78,26 +95,50 @@ export default function Home({
           password,
         }
       );
+      console.log(response.data);
       const token = response.data.access_token;
       const isAdmin = response.data.role;
-      Cookies.set("token", token);
-      userAuthCtx.setLoggedIn(true);
-      if (isAdmin) {
-        userAuthCtx.setIsAdmin(true);
-      }
-      if (isAdmin) {
-        router.push("/users");
+      const isSuspended = response.data.suspended;
+      if (isSuspended) {
+        setSuspended(true);
       } else {
-        router.push("/dashboard");
+        Cookies.set("token", token);
+        userAuthCtx.setLoggedIn(true);
+        if (isAdmin) {
+          userAuthCtx.setIsAdmin(true);
+          router.push("/users");
+        } else {
+          router.push("/dashboard");
+        }
       }
     } catch (error) {
-      console.log("ERROR");
+      setInvalid(true);
     }
   };
 
   return (
-    <div>
+    <div className="flex justify-center items-center h-screen flex-col">
+      <div>
+        <p className="text-3xl pb-10">
+          Welcome to this project management program
+        </p>
+      </div>
+      <div>
+        <p className="text-xl pb-10">
+          You can log in using your credentials below
+        </p>
+      </div>
       <AuthenticationForm onSubmit={onSubmitHandler} />
+      {suspended && (
+        <div>
+          <p className="text-red-500">Your account hase been suspended</p>
+        </div>
+      )}
+      {invalid && (
+        <div>
+          <p className="text-red-500">Your email or password is incorrect</p>
+        </div>
+      )}
     </div>
   );
 }

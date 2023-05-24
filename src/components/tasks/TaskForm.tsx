@@ -55,7 +55,7 @@ const TaskForm: React.FC<{
         <form className="p-2" onSubmit={onSubmitHandler}>
           <div className="w-fill flex justify-end">
             <button
-              className="text-white text-xl"
+              className="text-black text-xl"
               onClick={() => props.onClose()}
             >
               X
