@@ -3,9 +3,9 @@ import { NewProject } from "../../model/newProject";
 import { NewTask } from "../../model/newTask";
 import { NewUser } from "../../model/newUser";
 import { Project } from "../../model/project";
-import { Task, TaskStatus } from "../../model/task";
+import { Task } from "../../model/task";
 import { User } from "../../model/user";
-import { ProjectStatus } from "../../utils/utils";
+import { ProjectStatus, TaskStatus } from "../../utils/utils";
 
 const TaskForm: React.FC<{
   onSubmit: (task: NewTask) => void;

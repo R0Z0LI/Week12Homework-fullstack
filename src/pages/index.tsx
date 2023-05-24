@@ -106,8 +106,6 @@ export default function Home({
         userAuthCtx.setLoggedIn(true);
         if (isAdmin) {
           userAuthCtx.setIsAdmin(true);
-          router.push("/users");
-        } else {
           router.push("/dashboard");
         }
       }

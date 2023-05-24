@@ -7,8 +7,8 @@ function Navbar() {
   const userAuthContext = useContext(UserAuthContext);
   const onCLickeHandler = () => {
     Cookies.remove("token");
-    userAuthContext.setIsAdmin(false);
     userAuthContext.setLoggedIn(false);
+    userAuthContext.setIsAdmin(false);
   };
   return (
     <ul className="flex justify-start py-4 px-6 m-6 rounded-lg bg-blue-600">
