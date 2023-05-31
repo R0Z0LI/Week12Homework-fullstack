@@ -107,7 +107,7 @@ function TaskPage({
 
   const [refreshKey, setRefreshKey] = useState<number>(0);
 
-  const [taskId, setTaskId] = useState(0);
+  const [taskId, setTaskId] = useState("");
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -132,7 +132,7 @@ function TaskPage({
     refreshData();
   }, [tasks, showArchived]);
 
-  const onDeleteHandler = async (id: number | undefined) => {
+  const onDeleteHandler = async (id: string | undefined) => {
     try {
       const response = await axios.delete(
         `http://localhost:3000/api/task/${id}`,
@@ -153,7 +153,7 @@ function TaskPage({
 
   const onArchiveHandler = async (
     archive: boolean | undefined,
-    id: number | undefined
+    id: string | undefined
   ) => {
     try {
       const response = await axios.put(
@@ -176,12 +176,13 @@ function TaskPage({
     } catch (error) {}
   };
 
-  const onEditHandler = (id: number) => {
+  const onEditHandler = (id: string) => {
     setTaskId(id);
     setShowUpdateModal(true);
   };
 
   const onAddSubmitHandler = async (newTask: NewTask) => {
+    console.log(newTask);
     setShowAddModal(false);
     try {
       const response = await axios.post(
@@ -227,7 +228,7 @@ function TaskPage({
 
   const onChangeStatusHandler = async (
     status: string,
-    id: number | undefined
+    id: string | undefined
   ) => {
     const statusToUpdate = status as TaskStatus;
     try {

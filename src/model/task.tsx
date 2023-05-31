@@ -3,7 +3,7 @@ import { Project } from "./project";
 import { User } from "./user";
 
 export interface Task {
-  id?: number;
+  id?: string;
   name?: string;
   description?: string;
   isArchived: boolean;

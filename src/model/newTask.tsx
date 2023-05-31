@@ -1,5 +1,6 @@
+import { TaskStatus } from "../utils/utils";
 import { Project } from "./project";
-import { TaskStatus } from "./task";
+
 import { User } from "./user";
 
 export interface NewTask {

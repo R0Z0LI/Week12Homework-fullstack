@@ -5,16 +5,16 @@ import TaskItem from "./TaskItem";
 import TaskTableHead from "./TaskTableHead";
 
 const TasksList: React.FC<{
-  onDelete?: (index: number | undefined) => void;
-  onArchive?: (archive: boolean | undefined, id: number) => void;
-  onEdit?: (index: number) => void;
-  onChangeStatus: (status: string, id: number | undefined) => void;
+  onDelete?: (index: string | undefined) => void;
+  onArchive?: (archive: boolean | undefined, id: string) => void;
+  onEdit?: (index: string) => void;
+  onChangeStatus: (status: string, id: string | undefined) => void;
   functions: TaskFunction;
   items: Task[];
 }> = (props) => {
   const [tasks, setTasks] = useState<Task[]>(props.items);
 
-  const onDeleteHandler = (id: number | undefined) => {
+  const onDeleteHandler = (id: string | undefined) => {
     if (id !== undefined && props.onDelete) {
       props.onDelete(id);
     }
@@ -22,20 +22,20 @@ const TasksList: React.FC<{
 
   const onArchiveHandler = (
     archive: boolean | undefined,
-    id: number | undefined
+    id: string | undefined
   ) => {
     if (id !== undefined && archive !== undefined && props.onArchive) {
       props.onArchive(archive, id);
     }
   };
 
-  const onEditHandler = (id: number | undefined) => {
+  const onEditHandler = (id: string | undefined) => {
     if (id !== undefined && props.onEdit) {
       props.onEdit(id);
     }
   };
 
-  const onChangeStatusHandler = (status: string, id: number | undefined) => {
+  const onChangeStatusHandler = (status: string, id: string | undefined) => {
     if (id !== undefined) {
       props.onChangeStatus(status, id);
     }

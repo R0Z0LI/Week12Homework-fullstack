@@ -31,7 +31,7 @@ const TaskForm: React.FC<{
     const userId = userArray ? userArray[0] : undefined;
     const projectValue = projectInputRef.current?.value;
     const projectArray = projectValue?.split(" ");
-    const projectId = projectArray ? +projectArray[0] : undefined;
+    const projectId = projectArray ? projectArray[0] : undefined;
     const status: TaskStatus = TaskStatus.TODO;
 
     const user = props.users.find((item) => item.id === userId);

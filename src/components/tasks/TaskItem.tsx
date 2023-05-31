@@ -8,7 +8,7 @@ import { mdiDelete, mdiFileEdit, mdiArchiveArrowDown } from "@mdi/js";
 import { TaskFunction } from "../../utils/utils";
 
 const TaskItem: React.FC<{
-  id: number | undefined;
+  id: string | undefined;
   name: string | undefined;
   description: string | undefined;
   status: string | undefined;
@@ -17,10 +17,10 @@ const TaskItem: React.FC<{
   project: Project | undefined;
   items: Task[];
   item: number;
-  onDelete?: (index: number | undefined) => void;
-  onArchive?: (archive: boolean | undefined, id: number | undefined) => void;
-  onEdit?: (index: number | undefined) => void;
-  onChangeStatus: (status: string, id: number | undefined) => void;
+  onDelete?: (index: string | undefined) => void;
+  onArchive?: (archive: boolean | undefined, id: string | undefined) => void;
+  onEdit?: (index: string | undefined) => void;
+  onChangeStatus: (status: string, id: string | undefined) => void;
   function: TaskFunction;
 }> = (props) => {
   const [selectedStatus, setSelectedStatus] = useState(props.status);
