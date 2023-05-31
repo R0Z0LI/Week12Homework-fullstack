@@ -31,7 +31,9 @@ const UserItem: React.FC<{
 
   return (
     <li
-      className="p-3 grid gap-4 border-2 border-black hover:bg-blue-300"
+      className={`p-3 grid gap-4 border-2 border-black hover:bg-blue-300 ${
+        props.isSuspended ? "bg-slate-300 text-slate-600" : ""
+      }`}
       style={{
         gridTemplateColumns: "minmax(0, 1fr) repeat(6, minmax(0, 2fr))",
       }}
