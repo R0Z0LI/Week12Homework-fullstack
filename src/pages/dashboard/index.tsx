@@ -1,18 +1,9 @@
 import axios from "axios";
-import Cookies from "js-cookie";
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import Navbar from "../../components/NavBar";
-import EditProjectForm from "../../components/projects/ProjectForm";
-import ProjectList from "../../components/projects/ProjectList";
-import EditTaskForm from "../../components/tasks/TaskForm";
 import TasksList from "../../components/tasks/TaskList";
-import { NewProject } from "../../model/newProject";
-import { NewTask } from "../../model/newTask";
-import { Project } from "../../model/project";
 import { Task } from "../../model/task";
-import { User } from "../../model/user";
-import UserAuthContext from "../../store/user-auth";
-import { ProjectStatus, TaskFunction, TaskStatus } from "../../utils/utils";
+import { TaskFunction, TaskStatus } from "../../utils/utils";
 
 interface Context {
   req: {
@@ -77,7 +68,7 @@ function ProjectDetailsPage({
   const authorizationHeader = `Bearer ${token}`;
   const onChangeStatusHandler = async (
     status: string,
-    id: number | undefined
+    id: string | undefined
   ) => {
     const statusToUpdate = status as TaskStatus;
     try {

@@ -1,5 +1,4 @@
 import { ChangeEvent, useRef, useState } from "react";
-import Modal from "react-modal";
 import { NewUser } from "../../model/newUser";
 import { User } from "../../model/user";
 

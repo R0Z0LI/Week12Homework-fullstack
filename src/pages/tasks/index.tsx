@@ -9,7 +9,7 @@ import { Project } from "../../model/project";
 import { Task } from "../../model/task";
 import { User } from "../../model/user";
 import UserAuthContext from "../../store/user-auth";
-import { ProjectStatus, TaskFunction, TaskStatus } from "../../utils/utils";
+import { TaskFunction, TaskStatus } from "../../utils/utils";
 
 interface Context {
   req: {

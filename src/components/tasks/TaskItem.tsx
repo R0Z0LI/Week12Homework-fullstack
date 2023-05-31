@@ -58,12 +58,9 @@ const TaskItem: React.FC<{
           }`}
           style={{
             gridTemplateColumns:
-              "minmax(0, 0.3fr) repeat(5, minmax(0, 2fr)) repeat(3, minmax(0, 0.7fr))",
+              "repeat(5, minmax(0, 2fr)) repeat(3, minmax(0, 0.7fr))",
           }}
         >
-          <div className="p-1">
-            <p>{props.id}</p>
-          </div>
           <div className="p-1">
             <p>{props.name}</p>
           </div>

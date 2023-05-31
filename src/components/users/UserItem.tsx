@@ -35,12 +35,9 @@ const UserItem: React.FC<{
         props.isSuspended && "bg-slate-300 text-slate-600"
       }`}
       style={{
-        gridTemplateColumns: "minmax(0, 1fr) repeat(6, minmax(0, 2fr))",
+        gridTemplateColumns: "repeat(6, minmax(0, 2fr))",
       }}
     >
-      <div>
-        <p>{props.id}</p>
-      </div>
       <div>
         <p>{props.name}</p>
       </div>

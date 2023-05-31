@@ -1,11 +1,9 @@
-import { ChangeEvent, useRef, useState } from "react";
-import { NewProject } from "../../model/newProject";
+import { useRef, useState } from "react";
 import { NewTask } from "../../model/newTask";
-import { NewUser } from "../../model/newUser";
 import { Project } from "../../model/project";
 import { Task } from "../../model/task";
 import { User } from "../../model/user";
-import { ProjectStatus, TaskStatus } from "../../utils/utils";
+import { TaskStatus } from "../../utils/utils";
 
 const TaskForm: React.FC<{
   onSubmit: (task: NewTask) => void;
@@ -102,7 +100,7 @@ const TaskForm: React.FC<{
                 >
                   {props.users.map((item) => (
                     <option key={item.id} value={item.id}>
-                      {item.id} {item.name}
+                      {item.name}
                     </option>
                   ))}
                 </select>
@@ -119,7 +117,7 @@ const TaskForm: React.FC<{
                 >
                   {props.projects.map((item) => (
                     <option key={item.id} value={item.id}>
-                      {item.id} {item.name}
+                      {item.name}
                     </option>
                   ))}
                 </select>

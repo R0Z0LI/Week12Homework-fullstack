@@ -1,9 +1,9 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import TasksList from "../../../components/tasks/TaskList";
 import { Task } from "../../../model/task";
-import { ProjectStatus, TaskFunction } from "../../../utils/utils";
+import { TaskFunction } from "../../../utils/utils";
 
 interface Context {
   req: {

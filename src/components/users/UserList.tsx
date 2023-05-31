@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { User } from "../../model/user";
-import Navbar from "../NavBar";
 import TableHead from "./UserTableHead";
 import UserItem from "./UserItem";
 

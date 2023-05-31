@@ -1,6 +1,5 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { NewProject } from "../../model/newProject";
-import { NewUser } from "../../model/newUser";
 import { Project } from "../../model/project";
 import { User } from "../../model/user";
 import { ProjectStatus } from "../../utils/utils";
@@ -116,7 +115,7 @@ const ProjectForm: React.FC<{
                 >
                   {props.items.map((item) => (
                     <option key={item.id} value={item.id}>
-                      {item.id} {item.name}
+                      {item.name}
                     </option>
                   ))}
                 </select>
@@ -142,9 +141,7 @@ const ProjectForm: React.FC<{
                               )
                         }
                       />
-                      <label htmlFor={`team-${item.id}`}>
-                        {item.id} {item.name}
-                      </label>
+                      <label htmlFor={`team-${item.id}`}>{item.name}</label>
                     </div>
                   ))}
                 </div>
