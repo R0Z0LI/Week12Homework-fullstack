@@ -40,8 +40,10 @@ const ProjectList: React.FC<{
   };
   return (
     <div>
-      <ul className="m-4 border-2 border-blue-500">
-        <ProjectTableHead />
+      <ul className="md:m-4 m-2 border-2 border-black">
+        <div className="md:block hidden">
+          <ProjectTableHead />
+        </div>
         {projects.map((item, index) => (
           <ProjectItem
             key={item.id}

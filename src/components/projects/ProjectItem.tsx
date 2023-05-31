@@ -55,7 +55,7 @@ const ProjectItem: React.FC<{
 
   return (
     <li
-      className={`p-3 grid group gap-4 border-2 border-blue-500 hover:bg-blue-300 ${
+      className={`p-3 md:grid gap-4 border-2 border-black hover:bg-blue-300 ${
         props.archived && "bg-slate-300 text-slate-600"
       }`}
       style={{
@@ -67,12 +67,15 @@ const ProjectItem: React.FC<{
         className="p-1 text-blue-600 hover:cursor-pointer"
         onClick={onClickHandler}
       >
-        <p>{props.name}</p>
+        <span className="md:hidden">Name: {props.name}</span>
+        <span className="md:block hidden">{props.name}</span>
       </div>
       <div className="p-1">
-        <span>{props.decription}</span>
+        <span className="md:hidden">Description: {props.decription}</span>
+        <span className="md:block hidden">{props.decription}</span>
       </div>
       <div className="p-1">
+        <span className="md:hidden">Status: </span>
         <select
           className="group-hover:bg-blue-300 hover:cursor-pointer"
           value={selectedStatus}
@@ -86,19 +89,23 @@ const ProjectItem: React.FC<{
         </select>
       </div>
       <div className="p-1">
-        <span>{props.managerId?.name}</span>
+        <span className="md:hidden">Manager Name: {props.managerId?.name}</span>
+        <span className="md:block hidden">{props.managerId?.name}</span>
       </div>
       <div className="p-1">
+        <span className="md:hidden">Archive Project: </span>
         <button onClick={onArchiveHandler}>
           <Icon path={mdiArchiveArrowDown} size={1} />
         </button>
       </div>
       <div className="p-1">
+        <span className="md:hidden">Delete Project: </span>
         <button onClick={onDeleteHandler}>
           <Icon path={mdiDelete} size={1} />
         </button>
       </div>
       <div className="p-1">
+        <span className="md:hidden">Edit Project: </span>
         <button onClick={onEditHandler}>
           <Icon path={mdiFileEdit} size={1} />
         </button>

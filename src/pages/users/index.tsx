@@ -184,7 +184,7 @@ function UsersPage({
 
           <div className="flex justify-end">
             <button
-              className="bg-blue-300 hover:bg-blue-200 rounded-lg lg:p-2 lg:mr-4 lg:ml-4 mt-2 mr-2 p-1"
+              className="bg-blue-300 hover:bg-blue-200 rounded-lg md:p-2 md:mr-4 md:ml-4 mt-2 mr-2 p-1"
               onClick={() => setShowAddModal(true)}
             >
               Add User

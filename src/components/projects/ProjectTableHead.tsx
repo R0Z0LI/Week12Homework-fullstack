@@ -1,7 +1,7 @@
 const ProjectTableHead: React.FC<{}> = () => {
   return (
     <li
-      className="p-3 grid gap-4 border-2 border-blue-500"
+      className="p-3 grid gap-4 border-2 border-black"
       style={{
         gridTemplateColumns:
           "repeat(4, minmax(0, 2fr)) repeat(3, minmax(0, 0.7fr))",
