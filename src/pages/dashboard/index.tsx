@@ -100,11 +100,18 @@ function ProjectDetailsPage({
     <div>
       <div>
         <Navbar />
-        <TasksList
-          functions={TaskFunction.USER_FUNCTIONS}
-          items={tasks}
-          onChangeStatus={onChangeStatusHandler}
-        />
+        {tasks.length < 1 && (
+          <div className="flex justify-center">
+            <p className="text-4xl">You don't have any task</p>
+          </div>
+        )}
+        {tasks.length > 0 && (
+          <TasksList
+            functions={TaskFunction.USER_FUNCTIONS}
+            items={tasks}
+            onChangeStatus={onChangeStatusHandler}
+          />
+        )}
       </div>
     </div>
   );

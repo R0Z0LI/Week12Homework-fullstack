@@ -43,13 +43,10 @@ const TaskTableHead: React.FC<{
         <li
           className="p-3 grid gap-4 border-2 border-blue-500"
           style={{
-            gridTemplateColumns: "0.5fr 1.5fr 1.5fr 1.5fr 1.5fr 1.5fr",
+            gridTemplateColumns: "repeat(5, minmax(0, 2fr))",
             alignItems: "stretch",
           }}
         >
-          <div>
-            <span className="p-1">Id</span>
-          </div>
           <div>
             <span className="p-1">Name</span>
           </div>

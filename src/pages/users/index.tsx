@@ -65,8 +65,6 @@ function UsersPage({
   const router = useRouter();
   const userAuthCtx = useContext(UserAuthContext);
   const [role, setRole] = useState(userAuthCtx.isAdmin);
-  console.log(role);
-  console.log(role);
   const onDeleteHandler = async (id: string | undefined) => {
     const authorizationHeader = `Bearer ${token}`;
     try {

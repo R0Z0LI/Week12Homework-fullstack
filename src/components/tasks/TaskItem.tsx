@@ -103,13 +103,10 @@ const TaskItem: React.FC<{
         <li
           className="p-3 grid gap-4 border-2 border-blue-500 hover:bg-blue-300"
           style={{
-            gridTemplateColumns: "0.5fr 1.5fr 1.5fr 1.5fr 1.5fr 1.5fr",
+            gridTemplateColumns: "repeat(5, minmax(0, 2fr))",
             alignItems: "stretch",
           }}
         >
-          <div className="p-1">
-            <p>{props.id}</p>
-          </div>
           <div className="p-1">
             <p>{props.name}</p>
           </div>

@@ -124,10 +124,8 @@ function TaskPage({
   useEffect(() => {
     if (showArchived) {
       setSortedTasks(tasks);
-      console.log("csao");
     } else {
       setSortedTasks(tasks.filter((task) => !task.isArchived));
-      console.log("csumi");
     }
     refreshData();
   }, [tasks, showArchived]);
@@ -182,7 +180,6 @@ function TaskPage({
   };
 
   const onAddSubmitHandler = async (newTask: NewTask) => {
-    console.log(newTask);
     setShowAddModal(false);
     try {
       const response = await axios.post(

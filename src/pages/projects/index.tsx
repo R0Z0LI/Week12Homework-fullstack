@@ -168,9 +168,7 @@ function ProjectsPage({
     addedUsers?: User[]
   ) => {
     setShowAddModal(false);
-    console.log(newProject);
     try {
-      console.log(addedUsers);
       const response = await axios.post(
         "http://localhost:3000/api/project",
         {

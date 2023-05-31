@@ -28,7 +28,6 @@ export const getServerSideProps = async (context: Context) => {
     } else {
       Cookies.remove("token");
     }
-    console.log(response.data);
     return {
       props: {
         isAdmin: isAdmin,
@@ -74,7 +73,6 @@ export default function Home({
     }
   }, [invalid]);
 
-  console.log(isAdmin);
   useEffect(() => {
     if (isLoggedIn && !isAdmin) {
       userAuthCtx.setLoggedIn(true);
@@ -106,8 +104,8 @@ export default function Home({
         userAuthCtx.setLoggedIn(true);
         if (isAdmin) {
           userAuthCtx.setIsAdmin(true);
-          router.push("/dashboard");
         }
+        router.push("/dashboard");
       }
     } catch (error) {
       setInvalid(true);
