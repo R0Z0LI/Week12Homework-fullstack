@@ -61,13 +61,13 @@ function UsersPage({
   const [users, setUsers] = useState<User[]>(loadedUsers);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const [editUserId, setEditUserId] = useState(0);
+  const [editUserId, setEditUserId] = useState("");
   const router = useRouter();
   const userAuthCtx = useContext(UserAuthContext);
   const [role, setRole] = useState(userAuthCtx.isAdmin);
   console.log(role);
   console.log(role);
-  const onDeleteHandler = async (id: number | undefined) => {
+  const onDeleteHandler = async (id: string | undefined) => {
     const authorizationHeader = `Bearer ${token}`;
     try {
       const response = await axios.delete(
@@ -130,7 +130,7 @@ function UsersPage({
 
   const onSuspendHandler = async (
     suspend: boolean | undefined,
-    id: number | undefined
+    id: string | undefined
   ) => {
     const authorizationHeader = `Bearer ${token}`;
     try {
@@ -152,7 +152,7 @@ function UsersPage({
     } catch (error) {}
   };
 
-  const onEditHandler = (id: number) => {
+  const onEditHandler = (id: string) => {
     setEditUserId(id);
     setShowUpdateModal(true);
   };

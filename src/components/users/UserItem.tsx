@@ -3,7 +3,7 @@ import Icon from "@mdi/react";
 import { mdiAccountRemove, mdiAccountOff, mdiAccountEdit } from "@mdi/js";
 
 const UserItem: React.FC<{
-  id: number;
+  id: string;
   name: string | undefined;
   email: string | undefined;
   login: Date;
@@ -11,9 +11,9 @@ const UserItem: React.FC<{
   isSuspended: boolean;
   items: User[];
   item: number;
-  onDelete: (index: number | undefined) => void;
-  onSuspend: (suspend: boolean | undefined, id: number | undefined) => void;
-  onEdit: (index: number) => void;
+  onDelete: (index: string | undefined) => void;
+  onSuspend: (suspend: boolean | undefined, id: string | undefined) => void;
+  onEdit: (index: string) => void;
 }> = (props) => {
   const onDeleteHandler = () => {
     props.onDelete(props.id);
@@ -32,7 +32,7 @@ const UserItem: React.FC<{
   return (
     <li
       className={`p-3 grid gap-4 border-2 border-black hover:bg-blue-300 ${
-        props.isSuspended ? "bg-slate-300 text-slate-600" : ""
+        props.isSuspended && "bg-slate-300 text-slate-600"
       }`}
       style={{
         gridTemplateColumns: "minmax(0, 1fr) repeat(6, minmax(0, 2fr))",

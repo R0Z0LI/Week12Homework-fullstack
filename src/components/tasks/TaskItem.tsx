@@ -54,7 +54,7 @@ const TaskItem: React.FC<{
       {props.function == TaskFunction.ADMIN_FUNCTIONS && (
         <li
           className={`p-3 grid gap-4 border-2 border-blue-500 hover:bg-blue-300 ${
-            props.archived ? "bg-slate-300 text-slate-600" : ""
+            props.archived && "bg-slate-300 text-slate-600"
           }`}
           style={{
             gridTemplateColumns:

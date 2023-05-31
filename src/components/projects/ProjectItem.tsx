@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 
 const ProjectItem: React.FC<{
-  id: number | undefined;
+  id: string | undefined;
   name: string | undefined;
   decription: string | undefined;
   status: string | undefined;
@@ -16,10 +16,10 @@ const ProjectItem: React.FC<{
   managerId: User | undefined;
   items: Project[];
   item: number;
-  onDelete: (index: number | undefined) => void;
-  onArchive: (archive: boolean | undefined, id: number | undefined) => void;
-  onEdit: (index: number | undefined) => void;
-  onChangeStatus: (status: string, id: number | undefined) => void;
+  onDelete: (index: string | undefined) => void;
+  onArchive: (archive: boolean | undefined, id: string | undefined) => void;
+  onEdit: (index: string | undefined) => void;
+  onChangeStatus: (status: string, id: string | undefined) => void;
 }> = (props) => {
   const [selectedStatus, setSelectedStatus] = useState(props.status);
 
@@ -56,7 +56,7 @@ const ProjectItem: React.FC<{
   return (
     <li
       className={`p-3 grid gap-4 border-2 border-blue-500 hover:bg-blue-300 ${
-        props.archived ? "bg-slate-300 text-slate-600" : ""
+        props.archived && "bg-slate-300 text-slate-600"
       }`}
       style={{
         gridTemplateColumns:

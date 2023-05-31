@@ -1,15 +1,8 @@
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import Navbar from "../../../components/NavBar";
-import AddProjectForm from "../../../components/projects/AddProjectForm";
-import EditProjectForm from "../../../components/projects/ProjectForm";
-import ProjectList from "../../../components/projects/ProjectList";
 import TasksList from "../../../components/tasks/TaskList";
-import { NewProject } from "../../../model/newProject";
-import { Project } from "../../../model/project";
 import { Task } from "../../../model/task";
-import { User } from "../../../model/user";
 import { ProjectStatus, TaskFunction } from "../../../utils/utils";
 
 interface Context {
@@ -71,10 +64,19 @@ function ProjectDetailsPage({
   id: number;
 }) {
   const [tasks, setTasks] = useState<Task[]>(loadedTasks);
+  const router = useRouter();
   const onChangeStatusHandler = () => {};
 
   return (
     <div>
+      <div className="flex justify-start pt-8">
+        <button
+          className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 mr-4 ml-4"
+          onClick={() => router.push("/projects")}
+        >
+          Back
+        </button>
+      </div>
       <div>
         <TasksList
           functions={TaskFunction.USER_FUNCTIONS}

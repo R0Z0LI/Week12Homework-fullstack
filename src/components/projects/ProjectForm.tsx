@@ -27,7 +27,7 @@ const ProjectForm: React.FC<{
   const checkboxChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const userId = Number(event.target.value);
+    const userId = event.target.value;
     const user = props.items.find((user) => user.id === userId);
 
     if (event.target.checked && user) {
@@ -44,7 +44,7 @@ const ProjectForm: React.FC<{
     const managerValue = managerInputRef.current?.value;
     const managerArray = managerValue?.split(" ");
 
-    const managerId = managerArray ? +managerArray[0] : undefined;
+    const managerId = managerArray ? managerArray[0] : undefined;
     const status: ProjectStatus = ProjectStatus.ACTIVE;
     const manager = props.items.find((item) => item.id === managerId);
     const isArchived = false;

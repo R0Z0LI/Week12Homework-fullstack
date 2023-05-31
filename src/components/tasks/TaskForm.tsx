@@ -28,7 +28,7 @@ const TaskForm: React.FC<{
     const userValue = userInputRef.current?.value;
     const userArray = userValue?.split(" ");
 
-    const userId = userArray ? +userArray[0] : undefined;
+    const userId = userArray ? userArray[0] : undefined;
     const projectValue = projectInputRef.current?.value;
     const projectArray = projectValue?.split(" ");
     const projectId = projectArray ? +projectArray[0] : undefined;
@@ -46,6 +46,7 @@ const TaskForm: React.FC<{
       user,
       project,
     };
+
     props.onSubmit(newTask);
   };
 

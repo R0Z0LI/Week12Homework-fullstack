@@ -89,7 +89,7 @@ function ProjectsPage({
 
   const [refreshKey, setRefreshKey] = useState<number>(0);
 
-  const [projectId, setProjectId] = useState(0);
+  const [projectId, setProjectId] = useState("");
 
   const userAuthContext = useContext(UserAuthContext);
 
@@ -112,7 +112,7 @@ function ProjectsPage({
     refreshData();
   }, [projects, showArchived]);
 
-  const onDeleteHandler = async (id: number | undefined) => {
+  const onDeleteHandler = async (id: string | undefined) => {
     try {
       const response = await axios.delete(
         `http://localhost:3000/api/project/${id}`,
@@ -133,7 +133,7 @@ function ProjectsPage({
   };
   const onArchiveHandler = async (
     archive: boolean | undefined,
-    id: number | undefined
+    id: string | undefined
   ) => {
     try {
       const response = await axios.put(
@@ -158,7 +158,7 @@ function ProjectsPage({
     } catch (error) {}
   };
 
-  const onEditHandler = (id: number) => {
+  const onEditHandler = (id: string) => {
     setProjectId(id);
     setShowUpdateModal(true);
   };
@@ -168,6 +168,7 @@ function ProjectsPage({
     addedUsers?: User[]
   ) => {
     setShowAddModal(false);
+    console.log(newProject);
     try {
       console.log(addedUsers);
       const response = await axios.post(
@@ -220,7 +221,7 @@ function ProjectsPage({
 
   const onChangeStatusHandler = async (
     status: string,
-    id: number | undefined
+    id: string | undefined
   ) => {
     const statusToUpdate = status as ProjectStatus;
     try {

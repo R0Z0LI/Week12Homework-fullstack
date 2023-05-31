@@ -5,14 +5,14 @@ import TableHead from "./UserTableHead";
 import UserItem from "./UserItem";
 
 const UsersList: React.FC<{
-  onDelete: (index: number) => void;
-  onSuspend: (suspend: boolean | undefined, id: number) => void;
-  onEdit: (index: number) => void;
+  onDelete: (index: string) => void;
+  onSuspend: (suspend: boolean | undefined, id: string) => void;
+  onEdit: (index: string) => void;
   items: User[];
 }> = (props) => {
   const [users, setUsers] = useState<User[]>(props.items);
 
-  const onDeleteHandler = (id: number | undefined) => {
+  const onDeleteHandler = (id: string | undefined) => {
     if (id !== undefined) {
       props.onDelete(id);
     }
@@ -20,14 +20,14 @@ const UsersList: React.FC<{
 
   const onSuspenHandler = (
     suspend: boolean | undefined,
-    id: number | undefined
+    id: string | undefined
   ) => {
     if (id !== undefined) {
       props.onSuspend(suspend, id);
     }
   };
 
-  const onEditHandler = (id: number | undefined) => {
+  const onEditHandler = (id: string | undefined) => {
     if (id !== undefined) {
       props.onEdit(id);
     }
