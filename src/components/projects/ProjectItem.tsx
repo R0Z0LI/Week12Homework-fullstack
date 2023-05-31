@@ -55,7 +55,9 @@ const ProjectItem: React.FC<{
 
   return (
     <li
-      className="p-3 grid gap-4 border-2 border-blue-500 hover:bg-blue-300"
+      className={`p-3 grid gap-4 border-2 border-blue-500 hover:bg-blue-300 ${
+        props.archived ? "bg-slate-300 text-slate-600" : ""
+      }`}
       style={{
         gridTemplateColumns:
           "minmax(0, 0.3fr) repeat(4, minmax(0, 2fr)) repeat(3, minmax(0, 0.7fr))",
