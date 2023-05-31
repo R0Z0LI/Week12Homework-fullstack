@@ -124,11 +124,13 @@ function TaskPage({
   useEffect(() => {
     if (showArchived) {
       setSortedTasks(tasks);
+      console.log("csao");
     } else {
       setSortedTasks(tasks.filter((task) => !task.isArchived));
+      console.log("csumi");
     }
     refreshData();
-  }, [projects, showArchived]);
+  }, [tasks, showArchived]);
 
   const onDeleteHandler = async (id: number | undefined) => {
     try {

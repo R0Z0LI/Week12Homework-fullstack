@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Project } from "../../model/project";
-import { Task, TaskStatus } from "../../model/task";
+import { Task } from "../../model/task";
+import { TaskStatus } from "../../utils/utils";
 import { User } from "../../model/user";
 import Icon from "@mdi/react";
 import { mdiDelete, mdiFileEdit, mdiArchiveArrowDown } from "@mdi/js";
@@ -52,7 +53,9 @@ const TaskItem: React.FC<{
     <div>
       {props.function == TaskFunction.ADMIN_FUNCTIONS && (
         <li
-          className="p-3 grid gap-4 border-2 border-blue-500 hover:bg-blue-300"
+          className={`p-3 grid gap-4 border-2 border-blue-500 hover:bg-blue-300 ${
+            props.archived ? "bg-slate-300 text-slate-600" : ""
+          }`}
           style={{
             gridTemplateColumns:
               "minmax(0, 0.3fr) repeat(5, minmax(0, 2fr)) repeat(3, minmax(0, 0.7fr))",

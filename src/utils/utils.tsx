@@ -8,7 +8,8 @@ export enum TaskFunction {
   USER_FUNCTIONS = "user_functions",
 }
 
-export enum FormType {
-  EDIT = "edit",
-  ADD = "add",
+export enum TaskStatus {
+  TODO = "to-do",
+  IN_PROGRESS = "in-progress",
+  DONE = "done",
 }
