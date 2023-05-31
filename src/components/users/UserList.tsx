@@ -33,8 +33,10 @@ const UsersList: React.FC<{
   };
   return (
     <div>
-      <ul className="m-4 border-2 border-black">
-        <TableHead />
+      <ul className="m-2 border-2 border-black">
+        <div className="md:block hidden">
+          <TableHead />
+        </div>
         {users.map((item, index) => (
           <UserItem
             key={item.id}

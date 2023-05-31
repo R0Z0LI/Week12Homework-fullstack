@@ -13,9 +13,9 @@ function Navbar() {
     userAuthContext.setIsAdmin(false);
   };
   return (
-    <ul className="flex justify-start py-4 px-6 m-6 rounded-lg bg-blue-600">
+    <ul className="flex justify-start p-1 md:py-4 md:px-6 md:m-6 md:rounded-lg bg-blue-600">
       <li
-        className={`p-2 ml-8 rounded-lg ${
+        className={`md:p-2 p-1 m-1 md:ml-8 rounded-lg ${
           router.pathname === "/dashboard" ? "bg-blue-400" : "bg-blue-300"
         } hover:bg-blue-200`}
       >
@@ -25,7 +25,7 @@ function Navbar() {
       </li>
       {userAuthContext.isAdmin && (
         <li
-          className={`p-2 ml-8 rounded-lg ${
+          className={`md:p-2 p-1 m-1 md:ml-8 rounded-lg ${
             router.pathname === "/users" ? "bg-blue-400" : "bg-blue-300"
           } hover:bg-blue-200`}
         >
@@ -36,7 +36,7 @@ function Navbar() {
       )}
       {userAuthContext.isAdmin && (
         <li
-          className={`p-2 ml-8 rounded-lg ${
+          className={`md:p-2 p-1 m-1 md:ml-8 rounded-lg ${
             router.pathname === "/projects" ? "bg-blue-400" : "bg-blue-300"
           } hover:bg-blue-200`}
         >
@@ -47,7 +47,7 @@ function Navbar() {
       )}
       {userAuthContext.isAdmin && (
         <li
-          className={`p-2 ml-8 rounded-lg ${
+          className={`md:p-2 p-1 m-1 md:ml-8 rounded-lg ${
             router.pathname === "/tasks" ? "bg-blue-400" : "bg-blue-300"
           } hover:bg-blue-200`}
         >
@@ -56,9 +56,9 @@ function Navbar() {
           </Link>
         </li>
       )}
-      <li className="p-2 ml-8 rounded-lg bg-blue-300 hover:bg-blue-200">
+      <li className="md:p-2 p-1 m-1 md:ml-8 rounded-lg bg-blue-300 hover:bg-blue-200">
         <Link href="/" onClick={onCLickeHandler}>
-          <p className="">Log out</p>
+          <p className="">Logout</p>
         </Link>
       </li>
     </ul>
