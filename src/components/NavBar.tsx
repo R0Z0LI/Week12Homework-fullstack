@@ -48,7 +48,7 @@ function Navbar() {
       {userAuthContext.isAdmin && (
         <li
           className={`p-2 ml-8 rounded-lg ${
-            router.pathname === "/tasks" ? "bg-blue-500" : "bg-blue-300"
+            router.pathname === "/tasks" ? "bg-blue-400" : "bg-blue-300"
           } hover:bg-blue-200`}
         >
           <Link href="/tasks">

@@ -55,7 +55,7 @@ const ProjectItem: React.FC<{
 
   return (
     <li
-      className={`p-3 grid gap-4 border-2 border-blue-500 hover:bg-blue-300 ${
+      className={`p-3 grid group gap-4 border-2 border-blue-500 hover:bg-blue-300 ${
         props.archived && "bg-slate-300 text-slate-600"
       }`}
       style={{
@@ -63,14 +63,21 @@ const ProjectItem: React.FC<{
           "repeat(4, minmax(0, 2fr)) repeat(3, minmax(0, 0.7fr))",
       }}
     >
-      <div className="p-1" onClick={onClickHandler}>
+      <div
+        className="p-1 text-blue-600 hover:cursor-pointer"
+        onClick={onClickHandler}
+      >
         <p>{props.name}</p>
       </div>
       <div className="p-1">
         <span>{props.decription}</span>
       </div>
       <div className="p-1">
-        <select value={selectedStatus} onChange={onChangeStatusHandler}>
+        <select
+          className="group-hover:bg-blue-300 hover:cursor-pointer"
+          value={selectedStatus}
+          onChange={onChangeStatusHandler}
+        >
           {Object.values(ProjectStatus).map((status) => (
             <option key={status} value={status}>
               {status}

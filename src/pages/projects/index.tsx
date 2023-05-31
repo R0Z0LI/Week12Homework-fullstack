@@ -259,56 +259,65 @@ function ProjectsPage({
 
   return (
     <div key={refreshKey} className="flex flex-col">
-      {!role && (
+      {projects.length > 0 && (
         <div>
-          <p>You don't have permisson to for this page</p>
-          <p>Please login with an admin accout to access this page</p>
-          <button onClick={onLoginHandler}>Login page</button>
-          <p>Or check your tasks</p>
-          <button onClick={onDashboardHandler}>Dashboard page</button>
+          {!role && (
+            <div>
+              <p>You don't have permisson to for this page</p>
+              <p>Please login with an admin accout to access this page</p>
+              <button onClick={onLoginHandler}>Login page</button>
+              <p>Or check your tasks</p>
+              <button onClick={onDashboardHandler}>Dashboard page</button>
+            </div>
+          )}
+          {role && (
+            <div>
+              <Navbar />
+              <div className="flex justify-between">
+                <button
+                  className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 mr-4 ml-4"
+                  onClick={() => setShowArchived((prev) => !prev)}
+                >
+                  {showArchived
+                    ? "Hide Archived Projects"
+                    : "Show Archived Projects"}
+                </button>
+                <button
+                  className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 mr-4"
+                  onClick={() => setShowAddModal(true)}
+                >
+                  Add Project
+                </button>
+              </div>
+              {showAddModal && (
+                <ProjectForm
+                  onSubmit={onAddSubmitHandler}
+                  onClose={() => setShowAddModal(false)}
+                  items={users}
+                />
+              )}
+              {showUpdateModal && (
+                <ProjectForm
+                  project={projects.find((project) => project.id === projectId)}
+                  onSubmit={onEditSubmitHandler}
+                  onClose={() => setShowUpdateModal(false)}
+                  items={users}
+                />
+              )}
+              <ProjectList
+                items={sortedProjects}
+                onDelete={onDeleteHandler}
+                onArchive={onArchiveHandler}
+                onEdit={onEditHandler}
+                onChangeStatus={onChangeStatusHandler}
+              />
+            </div>
+          )}
         </div>
       )}
-      {role && (
-        <div>
-          <Navbar />
-          <div className="flex justify-between">
-            <button
-              className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 mr-4 ml-4"
-              onClick={() => setShowArchived((prev) => !prev)}
-            >
-              {showArchived
-                ? "Hide Archived Projects"
-                : "Show Archived Projects"}
-            </button>
-            <button
-              className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 mr-4"
-              onClick={() => setShowAddModal(true)}
-            >
-              Add Project
-            </button>
-          </div>
-          {showAddModal && (
-            <ProjectForm
-              onSubmit={onAddSubmitHandler}
-              onClose={() => setShowAddModal(false)}
-              items={users}
-            />
-          )}
-          {showUpdateModal && (
-            <ProjectForm
-              project={projects.find((project) => project.id === projectId)}
-              onSubmit={onEditSubmitHandler}
-              onClose={() => setShowUpdateModal(false)}
-              items={users}
-            />
-          )}
-          <ProjectList
-            items={sortedProjects}
-            onDelete={onDeleteHandler}
-            onArchive={onArchiveHandler}
-            onEdit={onEditHandler}
-            onChangeStatus={onChangeStatusHandler}
-          />
+      {projects.length < 1 && (
+        <div className="flex justify-center">
+          <p className="text-4xl">You don't have any project yet</p>
         </div>
       )}
     </div>

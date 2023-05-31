@@ -122,10 +122,14 @@ function TaskPage({
   const router = useRouter();
 
   useEffect(() => {
+    const sorted = [...tasks].sort((a, b) => {
+      return a.isArchived === b.isArchived ? 0 : a.isArchived ? 1 : -1;
+    });
+
     if (showArchived) {
-      setSortedTasks(tasks);
+      setSortedTasks(sorted);
     } else {
-      setSortedTasks(tasks.filter((task) => !task.isArchived));
+      setSortedTasks(sorted.filter((task) => !task.isArchived));
     }
     refreshData();
   }, [tasks, showArchived]);
@@ -263,57 +267,66 @@ function TaskPage({
 
   return (
     <div key={refreshKey} className="flex flex-col">
-      {!isAdmin && (
+      {tasks.length > 0 && (
         <div>
-          <p>You don't have permisson to for this page</p>
-          <p>Please login with an admin accout to access this page</p>
-          <button onClick={onLoginHandler}>Login page</button>
-          <p>Or check your tasks</p>
-          <button onClick={onDashboardHandler}>Dashboard page</button>
+          {!isAdmin && (
+            <div>
+              <p>You don't have permisson to for this page</p>
+              <p>Please login with an admin accout to access this page</p>
+              <button onClick={onLoginHandler}>Login page</button>
+              <p>Or check your tasks</p>
+              <button onClick={onDashboardHandler}>Dashboard page</button>
+            </div>
+          )}
+          {isAdmin && (
+            <div>
+              <Navbar />
+              <div className="flex justify-between">
+                <button
+                  className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 mr-4 ml-4"
+                  onClick={() => setShowArchived((prev) => !prev)}
+                >
+                  {showArchived ? "Hide Archived Tasks" : "Show Archived Tasks"}
+                </button>
+                <button
+                  className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 mr-4"
+                  onClick={() => setShowAddModal(true)}
+                >
+                  Add Task
+                </button>
+              </div>
+              {showAddModal && (
+                <TaskForm
+                  onSubmit={onAddSubmitHandler}
+                  onClose={() => setShowAddModal(false)}
+                  users={users}
+                  projects={projects}
+                />
+              )}
+              {showUpdateModal && (
+                <TaskForm
+                  onSubmit={onEditSubmitHandler}
+                  onClose={() => setShowAddModal(false)}
+                  users={users}
+                  projects={projects}
+                  task={tasks.find((task) => task.id === taskId)}
+                />
+              )}
+              <TasksList
+                items={sortedTasks}
+                functions={TaskFunction.ADMIN_FUNCTIONS}
+                onDelete={onDeleteHandler}
+                onArchive={onArchiveHandler}
+                onEdit={onEditHandler}
+                onChangeStatus={onChangeStatusHandler}
+              />
+            </div>
+          )}
         </div>
       )}
-      {isAdmin && (
-        <div>
-          <Navbar />
-          <div className="flex justify-between">
-            <button
-              className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 mr-4 ml-4"
-              onClick={() => setShowArchived((prev) => !prev)}
-            >
-              {showArchived ? "Hide Archived Tasks" : "Show Archived Tasks"}
-            </button>
-            <button
-              className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 mr-4"
-              onClick={() => setShowAddModal(true)}
-            >
-              Add Task
-            </button>
-          </div>
-          {showAddModal && (
-            <TaskForm
-              onSubmit={onAddSubmitHandler}
-              onClose={() => setShowAddModal(false)}
-              users={users}
-              projects={projects}
-            />
-          )}
-          {showUpdateModal && (
-            <TaskForm
-              onSubmit={onEditSubmitHandler}
-              onClose={() => setShowAddModal(false)}
-              users={users}
-              projects={projects}
-              task={tasks.find((task) => task.id === taskId)}
-            />
-          )}
-          <TasksList
-            items={sortedTasks}
-            functions={TaskFunction.ADMIN_FUNCTIONS}
-            onDelete={onDeleteHandler}
-            onArchive={onArchiveHandler}
-            onEdit={onEditHandler}
-            onChangeStatus={onChangeStatusHandler}
-          />
+      {tasks.length < 1 && (
+        <div className="flex justify-center">
+          <p className="text-4xl">You don't have any task yet</p>
         </div>
       )}
     </div>

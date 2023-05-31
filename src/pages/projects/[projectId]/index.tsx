@@ -15,7 +15,7 @@ interface Context {
 
 export const getServerSideProps = async (context: Context) => {
   const token = context.req.cookies.token;
-  const id = parseInt(context.req.cookies.id);
+  const id = context.req.cookies.id;
   const authorizationHeader = `Bearer ${token}`;
   try {
     const taskResponse = await axios.get(
@@ -69,21 +69,47 @@ function ProjectDetailsPage({
 
   return (
     <div>
-      <div className="flex justify-start pt-8">
-        <button
-          className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 mr-4 ml-4"
-          onClick={() => router.push("/projects")}
-        >
-          Back
-        </button>
-      </div>
-      <div>
-        <TasksList
-          functions={TaskFunction.USER_FUNCTIONS}
-          items={tasks}
-          onChangeStatus={onChangeStatusHandler}
-        />
-      </div>
+      {tasks.length > 0 && (
+        <div>
+          <div className="flex justify-start pt-8">
+            <button
+              className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 mr-4 ml-4"
+              onClick={() => router.push("/projects")}
+            >
+              Back
+            </button>
+          </div>
+          <div>
+            <TasksList
+              functions={TaskFunction.USER_FUNCTIONS}
+              items={tasks}
+              onChangeStatus={onChangeStatusHandler}
+            />
+          </div>
+        </div>
+      )}
+      {tasks.length < 1 && (
+        <div className="flex flex-col">
+          <div>
+            <p className="text-4xl text-center pt-4">
+              This project doesn't have any task yet
+            </p>
+          </div>
+          <div>
+            <p className="text-4xl text-center pt-4 hover:cursor-pointer">
+              You can add tasks{" "}
+              <span
+                className="text-blue-400 underline"
+                onClick={() => {
+                  router.push("/tasks");
+                }}
+              >
+                here
+              </span>
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

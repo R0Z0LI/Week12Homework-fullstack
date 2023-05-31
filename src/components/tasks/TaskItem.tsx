@@ -53,7 +53,7 @@ const TaskItem: React.FC<{
     <div>
       {props.function == TaskFunction.ADMIN_FUNCTIONS && (
         <li
-          className={`p-3 grid gap-4 border-2 border-blue-500 hover:bg-blue-300 ${
+          className={`p-3 group grid gap-4 border-2 border-blue-500 hover:bg-blue-300 ${
             props.archived && "bg-slate-300 text-slate-600"
           }`}
           style={{
@@ -68,7 +68,11 @@ const TaskItem: React.FC<{
             <span>{props.description}</span>
           </div>
           <div className="p-1">
-            <select value={selectedStatus} onChange={onChangeStatusHandler}>
+            <select
+              className="group-hover:bg-blue-300 hover:cursor-pointer"
+              value={selectedStatus}
+              onChange={onChangeStatusHandler}
+            >
               {Object.values(TaskStatus).map((status) => (
                 <option key={status} value={status}>
                   {status}
