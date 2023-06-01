@@ -42,8 +42,10 @@ const TasksList: React.FC<{
   };
   return (
     <div>
-      <ul className="m-4 border-2 border-blue-500">
-        <TaskTableHead function={props.functions} />
+      <ul className="md:m-4 m-2 border-2 border-black">
+        <div className="md:block hidden">
+          <TaskTableHead function={props.functions} />
+        </div>
         {tasks.map((item, index) => (
           <TaskItem
             key={item.id}

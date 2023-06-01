@@ -53,7 +53,7 @@ const TaskItem: React.FC<{
     <div>
       {props.function == TaskFunction.ADMIN_FUNCTIONS && (
         <li
-          className={`p-3 group grid gap-4 border-2 border-blue-500 hover:bg-blue-300 ${
+          className={`group p-3 md:grid gap-4 border-2 border-black hover:bg-blue-300 ${
             props.archived && "bg-slate-300 text-slate-600"
           }`}
           style={{
@@ -62,12 +62,15 @@ const TaskItem: React.FC<{
           }}
         >
           <div className="p-1">
-            <p>{props.name}</p>
+            <span className="md:hidden">Name: {props.name}</span>
+            <span className="md:block hidden">{props.name}</span>
           </div>
           <div className="p-1">
-            <span>{props.description}</span>
+            <span className="md:hidden">Description: {props.description}</span>
+            <span className="md:block hidden">{props.description}</span>
           </div>
           <div className="p-1">
+            <span className="md:hidden">Status: </span>
             <select
               className="group-hover:bg-blue-300 hover:cursor-pointer"
               value={selectedStatus}
@@ -81,22 +84,29 @@ const TaskItem: React.FC<{
             </select>
           </div>
           <div className="p-1">
-            <span>{props.user?.name}</span>
+            <span className="md:hidden">User Name: {props.user?.name}</span>
+            <span className="md:block hidden">{props.user?.name}</span>
           </div>
           <div className="p-1">
-            <span>{props.project?.name}</span>
+            <span className="md:hidden">
+              Project Name: {props.project?.name}
+            </span>
+            <span className="md:block hidden">{props.project?.name}</span>
           </div>
           <div className="p-1">
+            <span className="md:hidden">Archive Task: </span>
             <button onClick={onArchiveHandler}>
               <Icon path={mdiArchiveArrowDown} size={1} />
             </button>
           </div>
           <div className="p-1">
+            <span className="md:hidden">Delete Task: </span>
             <button onClick={onDeleteHandler}>
               <Icon path={mdiDelete} size={1} />
             </button>
           </div>
           <div className="p-1">
+            <span className="md:hidden">Edit Task: </span>
             <button onClick={onEditHandler}>
               <Icon path={mdiFileEdit} size={1} />
             </button>

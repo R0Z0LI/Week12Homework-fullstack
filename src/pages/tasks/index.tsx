@@ -283,13 +283,13 @@ function TaskPage({
               <Navbar />
               <div className="flex justify-between">
                 <button
-                  className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 mr-4 ml-4"
+                  className="bg-blue-300 hover:bg-blue-200 rounded-lg md:p-2 md:mr-4 md:ml-4 mt-2 ml-2 p-1"
                   onClick={() => setShowArchived((prev) => !prev)}
                 >
                   {showArchived ? "Hide Archived Tasks" : "Show Archived Tasks"}
                 </button>
                 <button
-                  className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 mr-4"
+                  className="bg-blue-300 hover:bg-blue-200 rounded-lg md:p-2 md:mr-4 mt-2 mr-2 p-1"
                   onClick={() => setShowAddModal(true)}
                 >
                   Add Task

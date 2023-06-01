@@ -1035,6 +1035,10 @@ video {
     display: none;
   }
 
+  .md\:w-\[400px\] {
+    width: 400px;
+  }
+
   .md\:rounded-lg {
     border-radius: 0.5rem;
   }

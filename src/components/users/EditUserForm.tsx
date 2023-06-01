@@ -46,7 +46,7 @@ const UserForm: React.FC<{
             </button>
           </div>
           <div>
-            <div className="w-[400px] bg-white p-2 rounded-md">
+            <div className="md:w-[400px] bg-white p-2 rounded-md">
               <div className="flex flex-col p-2">
                 <label htmlFor="name" className="pb-1 ">
                   Name
