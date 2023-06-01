@@ -44,7 +44,7 @@ export const getServerSideProps = async (context: Context) => {
     return {
       props: {
         loadedUsers: [],
-        token: token,
+        token: null,
       },
     };
   }
@@ -170,12 +170,16 @@ function UsersPage({
   return (
     <div key={refreshKey} className="flex flex-col">
       {!role && (
-        <div>
+        <div className="p-2 flex justify-center flex-col text-center text-2xl">
           <p>You don't have permisson to for this page</p>
           <p>Please login with an admin accout to access this page</p>
-          <button onClick={onLoginHandler}>Login page</button>
+          <button className="text-blue-500" onClick={onLoginHandler}>
+            Login page
+          </button>
           <p>Or check your tasks</p>
-          <button onClick={onDashboardHandler}>Dashboard page</button>
+          <button className="text-blue-500" onClick={onDashboardHandler}>
+            Dashboard page
+          </button>
         </div>
       )}
       {role && (

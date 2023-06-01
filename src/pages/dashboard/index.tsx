@@ -1,9 +1,11 @@
 import axios from "axios";
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { useContext, useState } from "react";
 import Navbar from "../../components/NavBar";
 import TasksList from "../../components/tasks/TaskList";
 import { Task } from "../../model/task";
 import { User } from "../../model/user";
+import UserAuthContext from "../../store/user-auth";
 import { TaskFunction, TaskStatus } from "../../utils/utils";
 
 interface Context {
@@ -66,7 +68,7 @@ export const getServerSideProps = async (context: Context) => {
       props: {
         loadedTasks: [],
         user: null,
-        token: token,
+        token: null,
       },
     };
   }
@@ -83,8 +85,10 @@ function ProjectDetailsPage({
 }) {
   const [tasks, setTasks] = useState<Task[]>(loadedTasks);
   const [currentUser, setCurrentUser] = useState(user);
-  const [sortedTasks, setSortedTasks] = useState<Task[]>([]);
   const [refreshKey, setRefreshKey] = useState<number>(0);
+  const router = useRouter();
+  const userAuthCtx = useContext(UserAuthContext);
+  const [loggedIn, setLoggedIn] = useState(userAuthCtx.loggedIn);
   const authorizationHeader = `Bearer ${token}`;
   const onChangeStatusHandler = async (
     status: string,
@@ -104,8 +108,6 @@ function ProjectDetailsPage({
         task.id === updatedTask.id ? updatedTask : task
       );
       setTasks(updatedTasks);
-      const sortTasks = updatedTasks.filter((task) => !task.isArchived);
-      setSortedTasks(sortTasks);
       if (response.status < 300) {
         refreshData();
       }
@@ -116,27 +118,42 @@ function ProjectDetailsPage({
     setRefreshKey((oldKey) => oldKey + 1);
   };
 
+  const onLoginHandler = () => {
+    router.push("/");
+  };
+
   return (
     <div>
-      <div>
-        <Navbar />
-        <div className="md:pl-4 pl-2 p-2 text-4xl">
-          <span>Welcome </span>
-          <span>{currentUser.name}</span>
+      {!loggedIn && (
+        <div className="p-2 flex justify-center flex-col text-center text-2xl">
+          <p>You don't have permisson to for this page</p>
+          <p>Please login to access this page</p>
+          <button className="text-blue-500" onClick={onLoginHandler}>
+            Login page
+          </button>
         </div>
-        {tasks.length < 1 && (
-          <div className="flex justify-center">
-            <p className="text-4xl">You don't have any task</p>
+      )}
+      {loggedIn && (
+        <div>
+          <Navbar />
+          <div className="md:pl-4 pl-2 p-2 text-4xl">
+            <span>Welcome </span>
+            <span>{currentUser.name}</span>
           </div>
-        )}
-        {tasks.length > 0 && (
-          <TasksList
-            functions={TaskFunction.USER_FUNCTIONS}
-            items={tasks}
-            onChangeStatus={onChangeStatusHandler}
-          />
-        )}
-      </div>
+          {tasks.length < 1 && (
+            <div className="flex justify-center">
+              <p className="text-4xl">You don't have any task</p>
+            </div>
+          )}
+          {tasks.length > 0 && (
+            <TasksList
+              functions={TaskFunction.USER_FUNCTIONS}
+              items={tasks}
+              onChangeStatus={onChangeStatusHandler}
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 }

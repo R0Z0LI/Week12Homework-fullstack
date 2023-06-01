@@ -68,7 +68,7 @@ export const getServerSideProps = async (context: Context) => {
       props: {
         loadedUsers: [],
         loadedProjects: [],
-        token: token,
+        token: null,
       },
     };
   }
@@ -262,67 +262,64 @@ function ProjectsPage({
 
   return (
     <div key={refreshKey} className="flex flex-col">
-      {projects.length > 0 && (
-        <div>
-          {!role && (
-            <div>
-              <p>You don't have permisson to for this page</p>
-              <p>Please login with an admin accout to access this page</p>
-              <button onClick={onLoginHandler}>Login page</button>
-              <p>Or check your tasks</p>
-              <button onClick={onDashboardHandler}>Dashboard page</button>
+      <div>
+        {!role && (
+          <div className="p-2 flex justify-center flex-col text-center text-2xl">
+            <p>You don't have permisson to for this page</p>
+            <p>Please login with an admin accout to access this page</p>
+            <button className="text-blue-500" onClick={onLoginHandler}>
+              Login page
+            </button>
+            <p>Or check your tasks</p>
+            <button className="text-blue-500" onClick={onDashboardHandler}>
+              Dashboard page
+            </button>
+          </div>
+        )}
+        {role && (
+          <div>
+            <Navbar />
+            <div className="flex justify-between">
+              <button
+                className="bg-blue-300 hover:bg-blue-200 rounded-lg md:p-2 md:mr-4 md:ml-4 mt-2 ml-2 p-1"
+                onClick={() => setShowArchived((prev) => !prev)}
+              >
+                {showArchived
+                  ? "Hide Archived Projects"
+                  : "Show Archived Projects"}
+              </button>
+              <button
+                className="bg-blue-300 hover:bg-blue-200 rounded-lg md:p-2 md:mr-4 mt-2 mr-2 p-1"
+                onClick={() => setShowAddModal(true)}
+              >
+                Add Project
+              </button>
             </div>
-          )}
-          {role && (
-            <div>
-              <Navbar />
-              <div className="flex justify-between">
-                <button
-                  className="bg-blue-300 hover:bg-blue-200 rounded-lg md:p-2 md:mr-4 md:ml-4 mt-2 ml-2 p-1"
-                  onClick={() => setShowArchived((prev) => !prev)}
-                >
-                  {showArchived
-                    ? "Hide Archived Projects"
-                    : "Show Archived Projects"}
-                </button>
-                <button
-                  className="bg-blue-300 hover:bg-blue-200 rounded-lg md:p-2 md:mr-4 mt-2 mr-2 p-1"
-                  onClick={() => setShowAddModal(true)}
-                >
-                  Add Project
-                </button>
-              </div>
-              {showAddModal && (
-                <ProjectForm
-                  onSubmit={onAddSubmitHandler}
-                  onClose={() => setShowAddModal(false)}
-                  items={users}
-                />
-              )}
-              {showUpdateModal && (
-                <ProjectForm
-                  project={projects.find((project) => project.id === projectId)}
-                  onSubmit={onEditSubmitHandler}
-                  onClose={() => setShowUpdateModal(false)}
-                  items={users}
-                />
-              )}
-              <ProjectList
-                items={sortedProjects}
-                onDelete={onDeleteHandler}
-                onArchive={onArchiveHandler}
-                onEdit={onEditHandler}
-                onChangeStatus={onChangeStatusHandler}
+            {showAddModal && (
+              <ProjectForm
+                onSubmit={onAddSubmitHandler}
+                onClose={() => setShowAddModal(false)}
+                items={users}
               />
-            </div>
-          )}
-        </div>
-      )}
-      {projects.length < 1 && (
-        <div className="flex justify-center">
-          <p className="text-4xl">You don't have any project yet</p>
-        </div>
-      )}
+            )}
+            {showUpdateModal && (
+              <ProjectForm
+                project={projects.find((project) => project.id === projectId)}
+                onSubmit={onEditSubmitHandler}
+                onClose={() => setShowUpdateModal(false)}
+                items={users}
+              />
+            )}
+            <ProjectList
+              items={sortedProjects}
+              onDelete={onDeleteHandler}
+              onArchive={onArchiveHandler}
+              onEdit={onEditHandler}
+              onChangeStatus={onChangeStatusHandler}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -40,28 +40,35 @@ const ProjectList: React.FC<{
   };
   return (
     <div>
-      <ul className="md:m-4 m-2 border-2 border-black">
-        <div className="md:block hidden">
-          <ProjectTableHead />
+      {projects.length > 0 && (
+        <ul className="md:m-4 m-2 border-2 border-black">
+          <div className="md:block hidden">
+            <ProjectTableHead />
+          </div>
+          {projects.map((item, index) => (
+            <ProjectItem
+              key={item.id}
+              id={item.id}
+              name={item.name}
+              decription={item.description}
+              status={item.status}
+              archived={item.isArchived}
+              managerId={item.manager}
+              items={projects}
+              item={index}
+              onDelete={onDeleteHandler}
+              onArchive={onArchiveHandler}
+              onEdit={onEditHandler}
+              onChangeStatus={onChangeStatusHandler}
+            />
+          ))}
+        </ul>
+      )}
+      {projects.length < 1 && (
+        <div className="flex justify-center">
+          <p className="text-4xl">You don't have any task yet</p>
         </div>
-        {projects.map((item, index) => (
-          <ProjectItem
-            key={item.id}
-            id={item.id}
-            name={item.name}
-            decription={item.description}
-            status={item.status}
-            archived={item.isArchived}
-            managerId={item.manager}
-            items={projects}
-            item={index}
-            onDelete={onDeleteHandler}
-            onArchive={onArchiveHandler}
-            onEdit={onEditHandler}
-            onChangeStatus={onChangeStatusHandler}
-          />
-        ))}
-      </ul>
+      )}
     </div>
   );
 };

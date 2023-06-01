@@ -1,8 +1,9 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import TasksList from "../../../components/tasks/TaskList";
 import { Task } from "../../../model/task";
+import UserAuthContext from "../../../store/user-auth";
 import { TaskFunction } from "../../../utils/utils";
 
 interface Context {
@@ -47,8 +48,8 @@ export const getServerSideProps = async (context: Context) => {
     return {
       props: {
         loadedTasks: [],
-        token: token,
-        id: id,
+        token: null,
+        id: null,
       },
     };
   }
@@ -65,49 +66,77 @@ function ProjectDetailsPage({
 }) {
   const [tasks, setTasks] = useState<Task[]>(loadedTasks);
   const router = useRouter();
+  const userAuthContext = useContext(UserAuthContext);
+
+  const [role, setRole] = useState(userAuthContext.isAdmin);
   const onChangeStatusHandler = () => {};
+
+  const onLoginHandler = () => {
+    router.push("/");
+  };
+
+  const onDashboardHandler = () => {
+    router.push("/dashboard");
+  };
 
   return (
     <div>
-      {tasks.length > 0 && (
-        <div>
-          <div className="flex justify-start pt-8">
-            <button
-              className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 mr-4 ml-4"
-              onClick={() => router.push("/projects")}
-            >
-              Back
-            </button>
-          </div>
-          <div>
-            <TasksList
-              functions={TaskFunction.USER_FUNCTIONS}
-              items={tasks}
-              onChangeStatus={onChangeStatusHandler}
-            />
-          </div>
+      {!role && (
+        <div className="p-2 flex justify-center flex-col text-center text-2xl">
+          <p>You don't have permisson to for this page</p>
+          <p>Please login with an admin accout to access this page</p>
+          <button className="text-blue-500" onClick={onLoginHandler}>
+            Login page
+          </button>
+          <p>Or check your tasks</p>
+          <button className="text-blue-500" onClick={onDashboardHandler}>
+            Dashboard page
+          </button>
         </div>
       )}
-      {tasks.length < 1 && (
-        <div className="flex flex-col">
-          <div>
-            <p className="text-4xl text-center pt-4">
-              This project doesn't have any task yet
-            </p>
-          </div>
-          <div>
-            <p className="text-4xl text-center pt-4 hover:cursor-pointer">
-              You can add tasks{" "}
-              <span
-                className="text-blue-400 underline"
-                onClick={() => {
-                  router.push("/tasks");
-                }}
-              >
-                here
-              </span>
-            </p>
-          </div>
+      {role && (
+        <div>
+          {tasks.length > 0 && (
+            <div>
+              <div className="flex justify-start pt-8">
+                <button
+                  className="bg-blue-300 hover:bg-blue-200 rounded-lg p-2 mr-4 ml-4"
+                  onClick={() => router.push("/projects")}
+                >
+                  Back
+                </button>
+              </div>
+              <div>
+                <TasksList
+                  functions={TaskFunction.USER_FUNCTIONS}
+                  items={tasks}
+                  onChangeStatus={onChangeStatusHandler}
+                />
+              </div>
+            </div>
+          )}
+          {tasks.length < 1 && (
+            <div className="flex flex-col">
+              <div>
+                <p className="text-4xl text-center pt-4">
+                  This project doesn't have any task yet
+                </p>
+              </div>
+              <div>
+                <p className="text-4xl text-center pt-4 hover:cursor-pointer">
+                  You can add tasks{" "}
+                  <span
+                    className="text-blue-400 underline"
+                    onClick={() => {
+                      router.push("/tasks");
+                    }}
+                  >
+                    here
+                  </span>
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

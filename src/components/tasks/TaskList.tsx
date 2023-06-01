@@ -42,30 +42,37 @@ const TasksList: React.FC<{
   };
   return (
     <div>
-      <ul className="md:m-4 m-2 border-2 border-black">
-        <div className="md:block hidden">
-          <TaskTableHead function={props.functions} />
+      {tasks.length > 0 && (
+        <ul className="md:m-4 m-2 border-2 border-black">
+          <div className="md:block hidden">
+            <TaskTableHead function={props.functions} />
+          </div>
+          {tasks.map((item, index) => (
+            <TaskItem
+              key={item.id}
+              id={item.id}
+              name={item.name}
+              description={item.description}
+              status={item.status}
+              archived={item.isArchived}
+              project={item.project}
+              user={item.user}
+              items={tasks}
+              item={index}
+              onDelete={onDeleteHandler}
+              onArchive={onArchiveHandler}
+              onEdit={onEditHandler}
+              onChangeStatus={onChangeStatusHandler}
+              function={props.functions}
+            />
+          ))}
+        </ul>
+      )}
+      {tasks.length < 1 && (
+        <div className="flex justify-center">
+          <p className="text-4xl">You don't have any task yet</p>
         </div>
-        {tasks.map((item, index) => (
-          <TaskItem
-            key={item.id}
-            id={item.id}
-            name={item.name}
-            description={item.description}
-            status={item.status}
-            archived={item.isArchived}
-            project={item.project}
-            user={item.user}
-            items={tasks}
-            item={index}
-            onDelete={onDeleteHandler}
-            onArchive={onArchiveHandler}
-            onEdit={onEditHandler}
-            onChangeStatus={onChangeStatusHandler}
-            function={props.functions}
-          />
-        ))}
-      </ul>
+      )}
     </div>
   );
 };
