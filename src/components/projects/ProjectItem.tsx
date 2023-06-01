@@ -55,7 +55,7 @@ const ProjectItem: React.FC<{
 
   return (
     <li
-      className={`p-3 md:grid gap-4 border-2 border-black hover:bg-blue-300 ${
+      className={`p-3 group md:grid gap-4 border-2 border-black hover:bg-blue-300 ${
         props.archived && "bg-slate-300 text-slate-600"
       }`}
       style={{

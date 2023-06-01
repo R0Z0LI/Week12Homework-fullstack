@@ -127,7 +127,7 @@ export default function Home({
       <AuthenticationForm onSubmit={onSubmitHandler} />
       {suspended && (
         <div>
-          <p className="text-red-500">Your account hase been suspended</p>
+          <p className="text-red-500">Your account has been suspended</p>
         </div>
       )}
       {invalid && (

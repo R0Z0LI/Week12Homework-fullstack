@@ -104,10 +104,13 @@ function ProjectsPage({
   const authorizationHeader = `Bearer ${token}`;
 
   useEffect(() => {
+    const sorted = [...projects].sort((a, b) => {
+      return a.isArchived === b.isArchived ? 0 : a.isArchived ? 1 : -1;
+    });
     if (showArchived) {
-      setSortedProjects(projects);
+      setSortedProjects(sorted);
     } else {
-      setSortedProjects(projects.filter((project) => !project.isArchived));
+      setSortedProjects(sorted.filter((project) => !project.isArchived));
     }
     refreshData();
   }, [projects, showArchived]);

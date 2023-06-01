@@ -3,7 +3,8 @@ const TableHead: React.FC<{}> = () => {
     <li
       className="p-3 md:grid gap-4 border-2 border-black"
       style={{
-        gridTemplateColumns: "2fr repeat(5, minmax(0, 2fr))",
+        gridTemplateColumns:
+          "repeat(4, minmax(0, 2fr)) repeat(2, minmax(0, 1fr))",
       }}
     >
       <div>

@@ -115,7 +115,7 @@ const TaskItem: React.FC<{
       )}
       {props.function === TaskFunction.USER_FUNCTIONS && (
         <li
-          className="p-3 md:grid gap-4 border-2 border-black hover:bg-blue-300"
+          className="p-3 group md:grid gap-4 border-2 border-black hover:bg-blue-300"
           style={{
             gridTemplateColumns: "repeat(5, minmax(0, 2fr))",
             alignItems: "stretch",
@@ -131,7 +131,11 @@ const TaskItem: React.FC<{
           </div>
           <div className="p-1">
             <span className="md:hidden">Status: </span>
-            <select value={selectedStatus} onChange={onChangeStatusHandler}>
+            <select
+              className="group-hover:bg-blue-300 hover:cursor-pointer"
+              value={selectedStatus}
+              onChange={onChangeStatusHandler}
+            >
               {Object.values(TaskStatus).map((status) => (
                 <option key={status} value={status}>
                   {status}

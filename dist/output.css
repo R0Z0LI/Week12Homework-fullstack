@@ -586,6 +586,10 @@ video {
   display: block;
 }
 
+.inline-block {
+  display: inline-block;
+}
+
 .inline {
   display: inline;
 }
@@ -716,6 +720,10 @@ video {
 
 .justify-self-end {
   justify-self: end;
+}
+
+.break-words {
+  overflow-wrap: break-word;
 }
 
 .rounded-lg {

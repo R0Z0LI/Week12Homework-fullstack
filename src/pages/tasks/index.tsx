@@ -170,8 +170,17 @@ function TaskPage({
         task.id === updatedTask.id ? updatedTask : task
       );
       setTasks(updatedTasks);
-      const sortTasks = updatedTasks.filter((task) => !task.isArchived);
-      setSortedTasks(sortTasks);
+
+      const sorted = [...updatedTasks].sort((a, b) => {
+        return a.isArchived === b.isArchived ? 0 : a.isArchived ? 1 : -1;
+      });
+
+      if (showArchived) {
+        setSortedTasks(sorted);
+      } else {
+        setSortedTasks(sorted.filter((task) => !task.isArchived));
+      }
+
       if (response.status < 300) {
         refreshData();
       }

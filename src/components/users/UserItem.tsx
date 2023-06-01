@@ -35,7 +35,8 @@ const UserItem: React.FC<{
         props.isSuspended && "bg-slate-300 text-slate-600"
       }`}
       style={{
-        gridTemplateColumns: "repeat(6, minmax(0, 2fr))",
+        gridTemplateColumns:
+          "repeat(4, minmax(0, 2fr)) repeat(2, minmax(0, 1fr))",
       }}
     >
       <div>
@@ -43,8 +44,8 @@ const UserItem: React.FC<{
         <span className="md:block hidden">{props.name}</span>
       </div>
       <div>
-        <span className="md:hidden">Email: {props.email}</span>
-        <span className="md:block hidden">{props.email}</span>
+        <span className="md:hidden break-words">Email: {props.email}</span>
+        <span className="md:block hidden break-words">{props.email}</span>
       </div>
       <div>
         {props.isAdmin && (
@@ -62,7 +63,7 @@ const UserItem: React.FC<{
       </div>
       <div>
         {props.isSuspended && (
-          <div>
+          <div className="flex">
             <span className="md:hidden">Status: Suspended</span>
             <span className="md:block hidden">Suspended</span>
             <button onClick={onSuspenHandler}>
@@ -71,7 +72,7 @@ const UserItem: React.FC<{
           </div>
         )}
         {!props.isSuspended && (
-          <div>
+          <div className="flex">
             <span className="md:hidden">Status: Active</span>
             <span className="md:block hidden">Active</span>
             <button onClick={onSuspenHandler}>
