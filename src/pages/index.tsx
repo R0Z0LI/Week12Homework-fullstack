@@ -115,12 +115,12 @@ export default function Home({
   return (
     <div className="flex justify-center items-center h-screen flex-col">
       <div>
-        <p className="text-3xl pb-10">
+        <p className="text-3xl text-center pb-10">
           Welcome to this project management program
         </p>
       </div>
       <div>
-        <p className="text-xl pb-10">
+        <p className="text-xl text-center pb-10">
           You can log in using your credentials below
         </p>
       </div>

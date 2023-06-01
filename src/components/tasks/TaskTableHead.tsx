@@ -7,7 +7,7 @@ const TaskTableHead: React.FC<{
     <div>
       {props.function === TaskFunction.ADMIN_FUNCTIONS && (
         <li
-          className="p-3 grid gap-4 border-2 border-blue-500"
+          className="p-3 grid gap-4 border-2 border-black"
           style={{
             gridTemplateColumns:
               "repeat(5, minmax(0, 2fr)) repeat(3, minmax(0, 0.7fr))",
@@ -41,7 +41,7 @@ const TaskTableHead: React.FC<{
       )}
       {props.function === TaskFunction.USER_FUNCTIONS && (
         <li
-          className="p-3 grid gap-4 border-2 border-blue-500"
+          className="p-3 grid gap-4 border-2 border-black"
           style={{
             gridTemplateColumns: "repeat(5, minmax(0, 2fr))",
             alignItems: "stretch",

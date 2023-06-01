@@ -3,6 +3,7 @@ import { useState } from "react";
 import Navbar from "../../components/NavBar";
 import TasksList from "../../components/tasks/TaskList";
 import { Task } from "../../model/task";
+import { User } from "../../model/user";
 import { TaskFunction, TaskStatus } from "../../utils/utils";
 
 interface Context {
@@ -37,9 +38,26 @@ export const getServerSideProps = async (context: Context) => {
         project: task.project,
       };
     });
+    const userResponse = await axios.get(
+      `http://localhost:3000/api/user/${id}`,
+      {
+        headers: { Authorization: authorizationHeader },
+      }
+    );
+    const userData = userResponse.data;
+    const user = {
+      id: userData.id,
+      name: userData.name,
+      email: userData.email,
+      password: userData.password,
+      lastLogin: userData.lastLogin,
+      isSuspended: userData.isSuspended,
+      isAdmin: userData.isAdmin,
+    };
     return {
       props: {
         loadedTasks: JSON.parse(JSON.stringify(tasks)),
+        user: user,
         token: token,
       },
     };
@@ -47,6 +65,7 @@ export const getServerSideProps = async (context: Context) => {
     return {
       props: {
         loadedTasks: [],
+        user: null,
         token: token,
       },
     };
@@ -55,14 +74,15 @@ export const getServerSideProps = async (context: Context) => {
 
 function ProjectDetailsPage({
   loadedTasks,
+  user,
   token,
-  id,
 }: {
   loadedTasks: Task[];
+  user: User;
   token: string;
-  id: number;
 }) {
   const [tasks, setTasks] = useState<Task[]>(loadedTasks);
+  const [currentUser, setCurrentUser] = useState(user);
   const [sortedTasks, setSortedTasks] = useState<Task[]>([]);
   const [refreshKey, setRefreshKey] = useState<number>(0);
   const authorizationHeader = `Bearer ${token}`;
@@ -100,6 +120,10 @@ function ProjectDetailsPage({
     <div>
       <div>
         <Navbar />
+        <div className="md:pl-4 pl-2 p-2 text-4xl">
+          <span>Welcome </span>
+          <span>{currentUser.name}</span>
+        </div>
         {tasks.length < 1 && (
           <div className="flex justify-center">
             <p className="text-4xl">You don't have any task</p>
